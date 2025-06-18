@@ -504,16 +504,16 @@ Web検索のみ利用可能の場合：
 基本3パターンの詳細な実践例を以下で学習できます：
 
 ### 🔄 Sequential Pipeline（順次パイプライン）
-- **初級**: [ブログ記事作成システム](./macro_example/basic_patterns/sequential/blog_creation.md) - テーマ設定から校正まで
-- **中級**: [学術調査パイプライン](./macro_example/basic_patterns/sequential/research_pipeline.md) - 仮説構築から論文執筆まで
+- **初級**: [ブログ記事作成システム](./examples/sequential/blog_creation.md) - テーマ設定から校正まで
+- **中級**: [学術調査パイプライン](./examples/sequential/research_pipeline.md) - 仮説構築から論文執筆まで
 
 ### ⚡ Parallel Processing（並列処理）
-- **初級**: [市場分析システム](./macro_example/basic_patterns/parallel/market_analysis.md) - 技術・市場・競合の同時調査
-- **中級**: [競合調査システム](./macro_example/basic_patterns/parallel/competitive_research.md) - 5社の並列企業分析
+- **初級**: [市場分析システム](./examples/parallel/market_analysis.md) - 技術・市場・競合の同時調査
+- **中級**: [競合調査システム](./examples/parallel/competitive_research.md) - 5社の並列企業分析
 
 ### 🎌 Conditional Execution（条件分岐）
-- **初級**: [適応型学習システム](./macro_example/basic_patterns/conditional/adaptive_tutor.md) - レベル別カリキュラム提供
-- **中級**: [コンテンツ処理システム](./macro_example/basic_patterns/conditional/content_processor.md) - ファイル特性による適応処理
+- **初級**: [適応型学習システム](./examples/conditional/adaptive_tutor.md) - レベル別カリキュラム提供
+- **中級**: [コンテンツ処理システム](./examples/conditional/content_processor.md) - ファイル特性による適応処理
 
 
 ---
