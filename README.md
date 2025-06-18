@@ -40,7 +40,7 @@
 
 #### Conditional Execution（条件分岐）
 - [適応型学習システム](./examples/conditional/adaptive_tutor.md) - 初級
-- [コンテンツ処理システム](./examples/conditional/content_processor.md) - 中級
+- [曖昧要求解釈システム](./examples/conditional/content_processor.md) - 中級（自然言語曖昧性フォールバック）
 
 ## 🚀 学習手順
 
