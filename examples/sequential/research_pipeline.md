@@ -1,0 +1,48 @@
+# 学術調査パイプライン（Sequential Pipeline - 中級）
+
+- `##` マークダウン見出し：順次実行するメインタスク
+- `###` マークダウン見出し：Task toolを利用して並列実行されるサブタスク
+- 条件分岐: 自然言語による条件指示（「...の場合は」「...に応じて」など）
+- `{{variable_name}}`：結果参照
+- 結果保存：「...を{{variable_name}}に保存してください」
+- 永続化保存：「{{variable_name}}をfilename.jsonに保存して永続化してください」
+- ファイル読み込み：「filename.jsonを読み込んで{{variable_name}}に設定してください」
+- 外部モジュール実行：「filename.mdの実行をしてください」
+- ツール使用：自然言語で指示（例：「Webで調べて」「ファイルを読んで」）
+
+---
+
+
+## 研究テーマ設定
+「生成AIの教育現場への影響」を研究テーマとして{{research_theme}}に保存し、
+{{research_theme}}をresearch_theme.jsonに保存して永続化してください。
+
+## 仮説構築
+{{research_theme}}について以下の観点から研究仮説を3つ構築し{{hypotheses}}に保存してください：
+- 学習効果への影響
+- 教師の役割変化
+- 学習者の創造性への影響
+
+## 文献調査
+{{hypotheses}}に関連する最新の研究論文・報告書を調査し、
+重要な知見を整理して{{literature_review}}に保存してください。
+
+## データ収集計画
+{{literature_review}}を基に、仮説検証に必要なデータ収集方法を設計し、
+具体的な調査手法を{{data_collection_plan}}に保存してください。
+
+## 予備分析
+{{data_collection_plan}}に従って利用可能な公開データで予備分析を実行し、
+初期的な知見を{{preliminary_analysis}}に保存してください。
+
+## レポート作成
+{{hypotheses}}、{{literature_review}}、{{preliminary_analysis}}を統合し、
+包括的な研究進捗レポートを作成してください．
+
+---
+
+**学習ポイント**:
+- 学術研究の標準的なプロセスをSequential Pipelineで実装
+- 複数変数の組み合わせによる複雑な情報統合
+- 現実的な研究テーマでの実践
+- 段階的な品質向上プロセス
