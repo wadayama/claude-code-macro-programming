@@ -11,3 +11,7 @@
 
 # Archive (local only)
 archive/
+
+# Experiments (local only)
+experiments/
+*_temp.*
