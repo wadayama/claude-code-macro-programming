@@ -45,8 +45,8 @@ Claude Code自然言語マクロプログラミングでは、異なる時間ス
    - Parallel Processing（並列処理）  
    - Conditional Execution（条件分岐）
    - Loop & Modular Programming（繰り返し・モジュール）
-   - [Problem Solving & Recursion](./examples/problem_recursion/)（問題解決・再帰）
-   - [Learning from Experience](./examples/learning_experience/)（経験学習・知識蓄積）
+   - Problem Solving & Recursion（問題解決・再帰）
+   - Learning from Experience（経験学習・知識蓄積）
 
 3. **実践的なシステム構築能力**
    - 段階別サンプルによる実習
@@ -97,6 +97,7 @@ Claude Codeの既存機能（Task tool、自然言語処理、マークダウン
    - 経験蓄積による改善可能な処理パターン
 6. **Claude Code との協働における共有ドキュメント** 
    - コンテキストにこのドキュメントをいれておくことで，「売上データについて、Parallel Processingパターンで地域別・商品別・時系列の3軸分析を並列実行し、  結果を{{analysis_result}}に統合してレポート作成までSequential Pipelineで実行してください」と言った具体性を伴う指示を出すことができる．
+   - プロンプト作成をClaude Codeにさせるときに，デザインパターンを指定して指示が出せる．
    - 人間とAIの協働における共通言語としてのデザインパターン
 
 ---
@@ -328,13 +329,6 @@ AI市場の規模と成長予測を{{market_size}}に保存してください。
 - ❌ 5分以内で完了する軽量タスク（→基本版を使用）
 
 **習得のポイント**: TODOリストとSequential Pipelineの統合により、大規模タスクの体系的管理手法を習得
-
-### 📁 実践サンプル
-
-Sequential Pipeline の詳細な実践例：
-
-- **初級**: [ブログ記事作成システム](./examples/sequential/blog_creation.md) - 調査から執筆まで
-- **上級**: [大規模調査レポート作成システム](./examples/sequential/robust_research_system.md) - TODO統合ロバスト版
 
 ---
 
@@ -658,6 +652,7 @@ Web検索のみ利用可能の場合：
 ### 🔄 Sequential Pipeline（順次パイプライン）
 - **初級**: [ブログ記事作成システム](./examples/sequential/blog_creation.md) - テーマ設定から校正まで
 - **中級**: [学術調査パイプライン](./examples/sequential/research_pipeline.md) - 仮説構築から論文執筆まで
+- **上級**: [大規模調査レポート作成システム](./examples/sequential/robust_research_system.md) - TODO統合ロバスト版
 
 ### ⚡ Parallel Processing（並列処理）
 - **初級**: [市場分析システム](./examples/parallel/market_analysis.md) - 技術・市場・競合の同時調査
@@ -666,20 +661,6 @@ Web検索のみ利用可能の場合：
 ### 🎌 Conditional Execution（条件分岐）
 - **初級**: [適応型学習システム](./examples/conditional/adaptive_tutor.md) - レベル別カリキュラム提供
 - **中級**: [曖昧要求解釈システム](./examples/conditional/content_processor.md) - 自然言語曖昧性フォールバック
-
-### 🔄 Loop & Modular Programming（状態管理・反復処理・モジュール設計）
-- **初級**: [学習進捗管理システム](./examples/loop_modular/learning_progress.md) - スコア向上の反復学習
-- **中級**: [プレゼンテーション品質最適化システム](./examples/loop_modular/presentation_optimizer.md) - 複数軸での反復改善
-
----
-
-## 🎯 基本パターン習得完了
-
-これで**基本3パターン**の習得が完了し、さらに高度な3パターンも学習可能となった：
-
-1. **Sequential Pipeline**: 順序のある処理の基礎
-2. **Parallel Processing**: 効率化と多角的視点  
-3. **Conditional Execution**: 柔軟性と堅牢性
 
 ---
 
@@ -828,6 +809,8 @@ Loop & Modular Programming の詳細な実践例：
 
 - **初級**: [学習進捗管理システム](./examples/loop_modular/learning_progress.md) - スコア向上の反復学習
 - **中級**: [プレゼンテーション品質最適化システム](./examples/loop_modular/presentation_optimizer.md) - 複数軸での反復改善
+
+
 
 ---
 
