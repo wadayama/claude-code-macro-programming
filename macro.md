@@ -1036,11 +1036,11 @@ Learning from Experience の詳細な実践例：
 
 - **初級**: [文章スタイル分析・改善システム](./examples/learning_experience/writing_style_learning.md) - JSON永続化による文章経験の記録・蓄積・活用（実行時間: 5-8分）
 - **中級**: [プロンプト継続改良システム](./examples/learning_experience/prompt_improvement_learning.md) - Loop Pattern統合による段階的プロンプト最適化学習（実行時間: 8-12分）
-- **上級**: [完全ブラインド最適化学習システム](./examples/learning_experience/blind_optimization_learning.md) - 真のブラインド探索環境での最適解発見学習（実行時間: 3-6分）
+- **上級**: [ブラインド最適化学習システム](./examples/learning_experience/blind_optimization_learning.md) - ブラインド探索環境での最適解発見学習（実行時間: 3-6分）
 
 ---
 
-### Pattern 7: Environment sensing, Knowledge-base and World model（環境センシング・知識ベース・環境モデル）
+### Pattern 7: Environment sensing, Knowledge-base and Environment model（環境センシング・知識ベース・環境モデル）
 
 **概要**: エージェントが環境を理解し、状況に応じた最適な判断を行うための知識体系とモデル構築手法。基本パターンの実行能力に「環境理解」と「状況判断」の知的能力を追加し、より実用的で適応的なエージェントシステムを実現。
 
@@ -1052,12 +1052,12 @@ Learning from Experience の詳細な実践例：
 
 **環境知識の3層構造**:
 ```
-環境に関する知識 = LLMの持つ常識 + ナレッジベース + ワールドモデル
+環境に関する知識 = LLMの持つ常識 + ナレッジベース + 環境モデル
 ```
 
 **情報統合による判断プロセス**:
 ```
-センシング情報 + ナレッジベース + ワールドモデル + 経験学習 → 行動判断
+センシング情報 + ナレッジベース + 環境モデル + 経験学習 → 行動判断
 ```
 
 ### 🔍 環境センシング（Environment Sensing）
@@ -1205,7 +1205,7 @@ customer_kb.mdを読み込んで{{knowledge_base}}に設定してください。
 {{inquiry}}と{{response}}をsupport_log.jsonに記録して永続化してください。
 ```
 
-### 🌍 ワールドモデル（World Model）
+### 🌍 環境モデル（Environment Model）
 
 **定義**: 環境を「状態を持つシステム」として捉え、その状態推定・予測を行うデジタルツイン
 
@@ -1260,7 +1260,7 @@ inventory_status.jsonを読み込んで{{current_state}}に設定してくださ
 ### 🔄 統合的判断システム
 
 **4つの情報源を統合した高度な判断システム**:
-`環境センシング + ナレッジベース + ワールドモデル + 経験学習`
+`環境センシング + ナレッジベース + 環境モデル + 経験学習`
 
 **実用例：会議アシスタントエージェント**
 ```markdown
@@ -1296,11 +1296,11 @@ past_meetings.jsonから類似会議の成功パターンを{{lessons}}に読み
 更新された知見をpast_meetings.jsonに追記して永続化してください。
 ```
 
-### 🎯 Knowledge base と World model の連携
+### 🎯 Knowledge base と Environment model の連携
 
 **相補的な活用**:
 - **ナレッジベース**: 不変のルール・知識（「どうすべきか」）
-- **ワールドモデル**: 動的な状態・予測（「現在どうなっているか」）
+- **環境モデル**: 動的な状態・予測（「現在どうなっているか」）
 - **統合判断**: 両者を組み合わせた最適な行動決定
 
 **Pattern統合の活用**:
@@ -1310,10 +1310,17 @@ past_meetings.jsonから類似会議の成功パターンを{{lessons}}に読み
 - **Parallel Processing**: 複数知識源の並列参照・統合
 
 **習得のポイント**:
-1. **適切な知識分離**でナレッジベースとワールドモデルを使い分ける
+1. **適切な知識分離**でナレッジベースと環境モデルを使い分ける
 2. **状態管理設計**で環境の重要な変化を確実に捕捉する
 3. **多重情報統合**で各情報源の特性を活かした判断を実現
 4. **継続的更新**で知識とモデルの精度を段階的に向上させる
+
+### 📁 実践サンプル
+
+Environment sensing, Knowledge-base and Environment model の詳細な実践例：
+
+- **初級**: [時間感知ユーザー状態推定システム](./examples/environment_sensing/time_based_user_model.md) - 時刻センシングによる状態推定・応答適応
+- **初級**: [プレゼンテーション構成アドバイザー](./examples/knowledge_base_patterns/presentation_advisor/presentation_advisor.md) - 専門知識による個別要件対応型構成生成
 
 ---
 
