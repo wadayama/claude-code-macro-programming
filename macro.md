@@ -30,14 +30,15 @@
    - 情報管理と結果の受け渡し
    - 条件分岐とマルチタスク処理の実装
 
-2. **7つのデザインパターン**
+2. **8つのデザインパターン**
    - Sequential Pipeline（順次パイプライン）
    - Parallel Processing（並列処理）  
    - Conditional Execution（条件分岐）
    - Loop & Modular Programming（繰り返し・モジュール）
    - Problem Solving & Recursion（問題解決・再帰）
    - Learning from Experience（経験学習・知識蓄積）
-   - Environment sensing, Knowledge-base and World model（環境センシング・知識ベース・環境モデル）
+   - Environment sensing, Knowledge-base and Environment model（環境センシング・知識ベース・環境モデル）
+   - Human-in-the-Loop（人間協調型エージェント設計）
 
 3. **実践的なシステム構築能力**
    - 段階別サンプルによる実習
