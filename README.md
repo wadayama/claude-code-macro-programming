@@ -18,6 +18,11 @@
 - **[examples/](./examples/)** - パターン別実例集  
 
 
+## 📧 お問い合わせ
+
+- **技術的な質問・バグ報告**: [GitHub Issues](../../issues)
+- **学術的なお問い合わせ**: wadayama@nitech.ac.jp
+
 ## 🛡️ ライセンス
 
 MIT License - 詳細は [LICENSE](./LICENSE) を参照。
