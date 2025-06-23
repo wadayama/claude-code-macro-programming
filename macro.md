@@ -372,13 +372,17 @@ AI市場の規模と成長予測を{{market_size}}に保存してください。
 
 ---
 
-## 🎌 実践例解説：俳句生成マルチエージェントシステム
-
-**ファイル**: [`haiku_direct.md`](./haiku_direct.md)
+## 🎌 実践例解説：俳句生成エージェントシステム
 
 ### システム概要
 
-俳句生成マルチエージェントシステムは、**Sequential Pipeline**と**Parallel Processing**を組み合わせた実用的な例である。創作プロセスをマクロ化することで、一貫した品質の俳句を効率的に生成する。
+俳句生成エージェントシステムは、**Sequential Pipeline**と**Parallel Processing**を組み合わせた実用的な例である。創作プロセスをマクロ化することで、一貫した品質の俳句を効率的に生成する。
+
+### 📁 実装ファイル
+
+- **[haiku_direct.md](./haiku_direct.md)** - 完全な実装コード
+- **学習目的**: Sequential PipelineとParallel Processingの組み合わせ手法
+- **実行方法**: ファイルを直接Claude Codeで実行
 
 ### 🏗️ システム構造分析
 
