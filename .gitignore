@@ -5,13 +5,36 @@
 .vscode/
 .idea/
 
-# Temporary files
-*.json
+# Temporary files - only specific output files, not examples
 *.tmp
-
-# Archive (local only)
-archive/
-
-# Experiments (local only)
-experiments/
 *_temp.*
+
+# Generated output files (exclude but keep reference examples)
+*_analysis.md
+*_output.md
+article_*.md
+blog_*.md
+aws_*.md
+azure_*.md
+gcp_*.md
+ibm_*.md
+oracle_*.md
+indoor.md
+outdoor_*.md
+social_*.md
+tech_*.md
+breakfast.md
+conference_*.md
+departure_*.md
+draft_*.md
+
+# Runtime generated JSON files (exclude but keep example configs)
+departure_variable.json
+social_variable.json
+user_state.json
+hitl_log.json
+study_log.json
+ai_market_report.json
+research_theme.json
+target_companies.json
+competitive_insights.json
