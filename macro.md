@@ -20,9 +20,9 @@
 直感的な自然言語でエージェントの振る舞いを設計し、Claude Codeに実行させることが可能になる。
 
 このドキュメントで示す自然言語マクロプログラミングとデザインパターンの大きな特徴は以下の3点に集約される。
-1. 可読性とアクセシビリティ: 自然言語で記述するため、非専門家でも理解・編集が可能。
-2. 構造化と再利用性: デザインパターンを用いて、複雑なタスクを体系的に構築できる。
-3. メタプログラミングへの高い適性: 「振る舞い」自体をデータとして扱い、操作できる。
+1. **可読性とアクセシビリティ**: 自然言語で記述するため、非専門家でも理解・編集が可能。
+2. **構造化と再利用性**: デザインパターンを用いて、複雑なタスクを体系的に構築できる。
+3. **メタプログラミングへの高い適性**: 「振る舞い」自体をデータとして扱い、操作できる。
 
 自然言語マクロプログラミングは、メタプログラミングとしての側面も有する。自然言語マクロプログラミングでは、LISPに似た「コードとデータの等価性」を持つ。この特性は、特にメタプログラミング（プログラムを操作するプログラムを書くこと）を容易にする。マクロを動的に生成し、それを改めて自身に組み込み実行させる、といった高度なメタプログラミングが可能である。
 
@@ -115,16 +115,16 @@ Step 3: Sequential Pipelineで解決策を順次実行
    - 条件分岐とマルチタスク処理の実装
 
 2. **10のデザインパターン**
-   - Sequential Pipeline（順次パイプライン）
-   - Parallel Processing（並列処理）  
-   - Conditional Execution（条件分岐）
-   - Loop & Modular Programming（繰り返し・モジュール）
-   - Problem Solving & Recursion（問題解決・再帰）
-   - Learning from Experience（経験学習・知識蓄積）
-   - Environment sensing, Knowledge-base and Environment model（環境センシング・知識ベース・環境モデル）
-   - Human-in-the-Loop（人間協調型エージェント設計）
-   - Error Handling（エラーハンドリング）
-   - Debug & Tracing（デバッグ・トレーシング）
+   - Pattern 1: Sequential Pipeline（順次パイプライン）
+   - Pattern 2: Parallel Processing（並列処理）  
+   - Pattern 3: Conditional Execution（条件分岐）
+   - Pattern 4: Loop & Modular Programming（繰り返し・モジュール）
+   - Pattern 5: Problem Solving & Recursion（問題解決・再帰）
+   - Pattern 6: Learning from Experience（経験学習・知識蓄積）
+   - Pattern 7: Environment sensing, Knowledge-base and Environment model（環境センシング・知識ベース・環境モデル）
+   - Pattern 8: Human-in-the-Loop（人間協調型エージェント設計）
+   - Pattern 9: Error Handling（エラーハンドリング）
+   - Pattern 10: Debug & Tracing（デバッグ・トレーシング）
 
 3. **実践的なシステム構築能力**
    - 段階別サンプルによる実習
