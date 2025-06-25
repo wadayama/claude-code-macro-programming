@@ -1738,7 +1738,6 @@ Claude Codeには以下のビルトインスラッシュコマンドが用意さ
 - `/clear` - 会話履歴とコンテキストをリセット（メモリ最適化）
 - `/model` - 使用するClaudeモデルの切り替え（Opus/Sonnet等）
 - `/ide` - IDE統合状態の確認（開いているファイル、linterエラー等）
-- `/init` - CLAUDE.mdファイルの自動生成
 - `/permissions` - ツール許可リストの管理
 
 
