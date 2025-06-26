@@ -985,7 +985,7 @@ Problem Solving & Recursion の詳細な実践例：
 評価: 味が薄い、べたつき気味（5/10点）
 
 ## 経験の記録
-以下の料理経験をlearning_memory.jsonファイルに保存して永続化してください：
+以下の料理経験をlearning_memory.jsonファイルに保存してください：
 
 {
   "cooking_experiences": [
@@ -1265,7 +1265,7 @@ customer_kb.mdを読み込んで{{knowledge_base}}に設定してください。
 {{knowledge_base}}を参照して{{inquiry}}に最適な回答を生成し、{{response}}に保存してください。
 
 ## 対応履歴記録
-{{inquiry}}と{{response}}をsupport_log.jsonに記録して永続化してください。
+{{inquiry}}と{{response}}をsupport_log.jsonに記録してください。
 ```
 
 ### 🌍 環境モデル（Environment Model）
@@ -1314,7 +1314,7 @@ inventory_status.jsonを読み込んで{{current_state}}に設定してくださ
 - 在庫不足の警告判定
 - 自動発注の必要性判断
 
-更新された状態を{{updated_state}}に保存し、inventory_status.jsonに永続化してください。
+更新された状態を{{updated_state}}に保存し、inventory_status.jsonに保存してください。
 
 ## 予測・アラート機能
 {{updated_state}}を分析し、今後24時間で在庫切れが予想される商品を{{alerts}}に抽出してください。
@@ -1356,7 +1356,7 @@ participant_profiles.jsonを読み込んで{{participants}}に設定してくだ
 past_meetings.jsonから類似会議の成功パターンを{{lessons}}に読み込み、
 {{meeting_action}}の改善に活用してください。
 
-更新された知見をpast_meetings.jsonに追記して永続化してください。
+更新された知見をpast_meetings.jsonに追記してください。
 ```
 
 ### 🎯 Knowledge base と Environment model の連携

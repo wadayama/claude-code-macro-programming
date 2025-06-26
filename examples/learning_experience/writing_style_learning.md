@@ -34,7 +34,7 @@
 
 ## Phase 2: 経験の記録と分析
 
-以下の構造で文章経験をwriting_memory.jsonファイルに保存して永続化してください：
+以下の構造で文章経験をwriting_memory.jsonファイルに保存してください：
 
 ```json
 {
