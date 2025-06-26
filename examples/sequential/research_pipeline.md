@@ -9,7 +9,7 @@ TODOリストをすべてクリアしてください
 
 ## 研究テーマ設定
 「生成AIの教育現場への影響」を研究テーマとして{{research_theme}}に保存し、
-{{research_theme}}をresearch_theme.jsonに保存して永続化してください。
+{{research_theme}}をresearch_theme.jsonに保存してください。
 
 ## 仮説構築
 {{research_theme}}について以下の観点から研究仮説を3つ構築し{{hypotheses}}に保存してください：

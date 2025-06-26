@@ -9,7 +9,7 @@ TODOリストをすべてクリアしてください
 
 ## 調査対象設定
 「クラウドサービス市場」の主要企業として以下5社を{{target_companies}}に保存し、
-{{target_companies}}をtarget_companies.jsonに保存して永続化してください：
+{{target_companies}}をtarget_companies.jsonに保存してください：
 - Amazon AWS
 - Microsoft Azure  
 - Google Cloud Platform
@@ -47,7 +47,7 @@ Oracle Cloudのデータベース強み、エンタープライズ顧客基盤�
 
 ## 戦略的インサイト抽出
 {{comparison_matrix}}を基に、市場における競争構造と今後の展開予測を分析し、
-戦略的示唆をcompetitive_insights.jsonに保存して永続化してください。
+戦略的示唆をcompetitive_insights.jsonに保存してください。
 
 ---
 

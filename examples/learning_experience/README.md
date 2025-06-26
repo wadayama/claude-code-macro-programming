@@ -6,7 +6,7 @@ Claude Code自然言語マクロプログラミングにおける「Learning fro
 
 ### 1. 基礎サンプル
 - **[writing_style_learning.md](./writing_style_learning.md)** - 文章スタイル分析・改善システム
-  - JSON永続化による文章経験の記録・蓄積
+  - JSONファイル保存による文章経験の記録・蓄積
   - 文体分析と改善ポイントの発見
   - 過去経験を活用した文章品質向上
 
@@ -54,7 +54,7 @@ claude code run blind_optimization_learning.md
 ## 🔍 学習ポイント
 
 ### Learning from Experienceパターンの核心
-1. **JSON永続化**: `{{variable_name}}をfilename.jsonに保存して永続化してください`
+1. **JSONファイル保存**: `{{variable_name}}をfilename.jsonに保存してください`
 2. **経験蓄積**: 過去の試行結果を体系的に記録
 3. **知見活用**: 蓄積された経験からの論理的推論
 4. **継続学習**: Loop Patternとの組み合わせによる反復改善
