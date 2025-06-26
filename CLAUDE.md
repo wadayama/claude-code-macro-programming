@@ -12,21 +12,59 @@
 - 曖昧な表現でも、パターンマッチングにより適切に解釈・実行する
 - エラーが発生した場合は、可能な限り代替手段で目的を達成する
 
-## 変数システム
+## 変数システム（JSONファイル自動管理）
 
-### 基本構文
-- **変数参照**: `{{variable_name}}`
-- **変数保存**: 「...を{{variable_name}}に保存してください」
+### 🚨 絶対遵守ルール：変数保存
 
-### 実行仕様
+変数保存指示「{{variable_name}}にVALUEを保存してください」または「VALUEを{{variable_name}}に保存してください」を受けた場合：
+
+1. **必ずReadツールでvariables.jsonを読み込む**
+   - ファイルが存在しない場合は空のJSON「{}」として扱う
+   - 読み込みエラーの場合も空のJSON「{}」として扱う
+
+2. **必ずJSONにvariable_name: "VALUE"を追加/更新する**
+   - 既存の変数は上書きする
+   - 新しい変数は追加する
+   - 値は必ず文字列として保存する
+
+3. **必ずWriteツールで更新されたJSONをvariables.jsonに保存する**
+   - JSON形式を正しく保持する
+   - UTF-8エンコーディングで保存する
+
+4. **必ず保存完了を報告する**
+   - 「{{variable_name}}に"VALUE"を保存しました」と表示する
+
+### 🚨 絶対遵守ルール：変数参照
+
+変数参照指示「{{variable_name}}を取得してください」または「{{variable_name}}の値を使用してください」を受けた場合：
+
+1. **必ずReadツールでvariables.jsonを読み込む**
+   - ファイルが存在しない場合は空のJSON「{}」として扱う
+
+2. **必ずvariable_nameの値を取得する**
+   - 変数が存在しない場合は空文字列として扱う
+   - 取得した値を表示する
+
+3. **取得した値を後続の処理で使用する**
+   - 条件分岐、計算、文字列生成等で活用する
+
+### 実行例
+
 ```
-# 保存動作
-「Python初心者向けのポイント3つを{{basics}}に保存してください」
-→ AIは内容を{{basics}}変数として記憶し、後続の処理で参照可能にする
+# 変数保存の例
+ユーザー：「{{user_name}}に田中太郎を保存してください」
+AI実行：
+1. Read variables.json
+2. JSON更新：{"user_name": "田中太郎"}
+3. Write variables.json
+4. 表示：「{{user_name}}に"田中太郎"を保存しました」
 
-# 参照動作
-「{{basics}}を基に学習計画を作成してください」
-→ AIは{{basics}}に保存された内容を取得し、それを基に処理を実行する
+# 変数参照の例
+ユーザー：「{{user_name}}を取得してください」
+AI実行：
+1. Read variables.json
+2. user_nameの値を取得："田中太郎"
+3. 表示：「田中太郎」
 ```
 
 ## 条件分岐
@@ -41,27 +79,10 @@
 ### 実行仕様
 ```
 「{{user_level}}が初心者の場合は基本コースを、上級者の場合は応用コースを提案してください」
-→ AIは{{user_level}}の値を判定し、条件に応じて異なる処理を実行する
+→ AIは{{user_level}}の値をvariables.jsonから取得し、条件に応じて異なる処理を実行する
 
 「{{project_type}}に応じて適切な技術スタックを選択してください」
-→ AIは{{project_type}}の値に基づいて最適な選択肢を提示する
-```
-
-## 永続化機能
-
-### 基本構文
-- **永続化保存**: 「{{variable_name}}をfilename.jsonに保存して永続化してください」
-- **ファイル読み込み**: 「filename.jsonを読み込んで{{variable_name}}に設定してください」
-
-### 実行仕様
-```
-# 永続化保存動作
-「{{project_config}}をconfig.jsonに保存して永続化してください」
-→ AIは{{project_config}}の内容をconfig.jsonファイルに書き込む
-
-# ファイル読み込み動作
-「config.jsonを読み込んで{{saved_config}}に設定してください」
-→ AIはconfig.jsonの内容を読み取り、{{saved_config}}変数に設定する
+→ AIは{{project_type}}の値をvariables.jsonから取得し、最適な選択肢を提示する
 ```
 
 ## 外部モジュール実行
@@ -92,7 +113,7 @@
 ### 実行仕様
 ```
 「最新のAI技術についてWebで調べて{{ai_trends}}に保存してください」
-→ AIはWebSearchツールを使用し、結果を{{ai_trends}}変数に保存する
+→ AIはWebSearchツールを使用し、結果を{{ai_trends}}変数としてvariables.jsonに保存する
 
 「package.jsonファイルを読んで依存関係を確認してください」
 → AIはReadツールでpackage.jsonを読み込み、依存関係を分析・報告する
@@ -129,8 +150,8 @@
 （すべての回を省略せずに実行・表示する）
 
 「{{score}}が70以上になるまで以下を繰り返してください」
-→ 1回目: 処理実行とscore確認
-→ 2回目: 処理実行とscore確認
+→ 1回目: 処理実行とscoreをvariables.jsonから確認
+→ 2回目: 処理実行とscoreをvariables.jsonから確認
 → ...
 → 条件達成または安全制限で終了
 ```
@@ -150,4 +171,11 @@ AIが本仕様に従わなかった場合：
 ## 注意事項
 
 - 変数名は `{{}}` で囲む必要があります
-- 永続化ファイルは適切な拡張子（.json、.md など）を使用してください
+- すべての変数はvariables.jsonファイルで自動管理されます
+- 変数操作後は必ずvariables.jsonの状態を確認できます
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
