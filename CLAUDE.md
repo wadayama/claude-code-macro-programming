@@ -173,9 +173,3 @@ AIが本仕様に従わなかった場合：
 - 変数名は `{{}}` で囲む必要があります
 - すべての変数はvariables.jsonファイルで自動管理されます
 - 変数操作後は必ずvariables.jsonの状態を確認できます
-
-# important-instruction-reminders
-Do what has been asked; nothing more, nothing less.
-NEVER create files unless they're absolutely necessary for achieving your goal.
-ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
