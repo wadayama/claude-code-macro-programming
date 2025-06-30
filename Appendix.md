@@ -255,3 +255,136 @@ failure_patterns.jsonに記録：
 ```
 
 自然言語マクロプログラミングの確率的特性を理解し、適切なリスク軽減策を講じることで、多様な分野での安全で責任ある活用が可能となる。
+
+## A.4: Python Tool Integration（Python ツール統合）
+
+### 背景と概念
+
+自然言語マクロプログラミングにおいて、variables.jsonファイルを介してマクロとPythonプログラム間で情報交換を行うことで、Pythonの豊富なライブラリ群を活用できる。この統合手法により、マクロシステムの機能を無限に拡張することが可能になる。
+
+### 基本統合パターン
+
+#### 標準的なPythonツール構造
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import json
+from pathlib import Path
+
+def main():
+    try:
+        # variables.jsonからデータ読み取り
+        with open("variables.json", 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # 入力データの取得
+        input_data = data.get("input_key", "")
+        
+        # Python処理の実行（例：テキスト分析）
+        result = analyze_data(input_data)
+        
+        # 結果をvariables.jsonに書き戻し
+        data["output_key"] = result
+        with open("variables.json", 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        
+        print("処理が完了しました")
+        
+    except Exception as e:
+        # エラー情報の記録
+        try:
+            with open("variables.json", 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            data["error"] = {"message": str(e), "status": "failed"}
+            with open("variables.json", 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except:
+            pass
+        print(f"エラーが発生しました: {e}")
+
+def analyze_data(input_data):
+    """実際の処理ロジック"""
+    # ここにPythonライブラリを活用した処理を実装
+    return {"processed": input_data, "analysis": "result"}
+
+if __name__ == "__main__":
+    main()
+```
+
+#### マクロからの呼び出し
+
+```markdown
+## Pythonツールの実行
+analysis_tool.pyを実行してください。
+
+処理結果を{{analysis_result}}に設定してください。
+```
+
+### 実用例：俳句データ分析ツール
+
+実際に動作確認済みの例として、俳句の詳細分析を行うツールを示す：
+
+#### 処理内容
+- **構造分析**: 5-7-5音律構造の評価
+- **語彙分析**: 使用単語の分類と多様性測定
+- **独創性評価**: 表現技法と創造性の定量化
+- **統計生成**: 全体統計と推奨事項の自動生成
+
+#### 情報交換の流れ
+1. variables.jsonから俳句データ（`haiku_1`〜`haiku_4`、`themes`等）を読み取り
+2. Python による詳細なテキスト分析処理を実行
+3. 構造化された分析結果を`analysis_report`としてvariables.jsonに保存
+
+#### マクロでの利用
+
+**前提条件**: 俳句生成システム（haiku_direct.md）実行後のvariables.jsonに俳句データが保存されている状態
+
+```markdown
+現在のvariables.jsonに保存されている俳句データを分析するため、
+haiku_analyzer.pyを実行してください。
+
+分析結果を{{analysis_report}}に設定してください。
+```
+
+**実行例**:
+1. `haiku_direct.mdの実行をしてください` - 俳句データをvariables.jsonに保存
+2. `haiku_analyzer.pyを実行してください` - 保存された俳句データを分析
+
+### 応用可能性
+
+#### 数値・科学計算
+- **NumPy/SciPy**: 高度な数値解析、統計処理、最適化計算
+- **SymPy**: 数式処理、微分積分、方程式求解
+
+#### データ分析・可視化
+- **pandas**: CSV/Excel処理、データクレンジング、集計分析
+- **matplotlib/plotly**: グラフ生成、チャート作成、データ可視化
+
+#### 機械学習・AI
+- **scikit-learn**: 分類、回帰、クラスタリング分析
+- **TensorFlow/PyTorch**: 深層学習モデルの構築・実行
+
+#### 業務自動化
+- **requests/beautifulsoup**: Webスクレイピング、API連携
+- **openpyxl/xlsxwriter**: Excel自動生成、レポート作成
+- **PIL/OpenCV**: 画像処理、画像解析
+
+### 設計上の利点
+
+#### 透明性とデバッグ性
+- variables.jsonファイルで全ての情報交換が可視化
+- 処理前後の状態を直接確認可能
+- エラー発生時の診断が容易
+
+#### 統合の自然さ
+- 既存のマクロ構文と完全に統合
+- 複雑なAPI設計や設定が不要
+- 自然言語での直感的な呼び出し
+
+#### 拡張性と保守性
+- 標準的なPythonコードで実装可能
+- ライブラリの自由な選択と組み合わせ
+- モジュール化による再利用性
+
+Python Tool Integration により、自然言語マクロプログラミングはPythonエコシステム全体への汎用的なアクセスを実現し、専門的な計算処理から業務自動化まで幅広い応用が可能になる。
