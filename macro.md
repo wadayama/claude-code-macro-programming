@@ -131,6 +131,12 @@ variables.json自動管理により変数値の永続化は保証されている
    - 俳句生成システム等の応用例
    - 業務自動化への応用手法
 
+4. **付録（Appendix）**
+   - A.1: Claude Codeスラッシュコマンドによるシステム制御
+   - A.2: Event-Driven実行とシステム統合
+   - A.3: 重要なタスクでのリスク軽減戦略
+   - A.4: Python Tool Integration（Python ツール統合）
+
 ---
 
 **Version**: 1.0  
