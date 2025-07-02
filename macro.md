@@ -138,6 +138,7 @@ variables.json自動管理により変数値の永続化は保証されている
    - A.4: Python Tool Integration（Python ツール統合）
    - A.5: マルチエージェント・システム設計
    - A.6: 監査ログシステム
+   - A.7: 自己検証システム
 
 ---
 
@@ -1943,3 +1944,4 @@ API取得に失敗した場合（Catch）:
 - **A.4: Python Tool Integration（Python ツール統合）** - variables.json連携によるPythonエコシステム活用
 - **A.5: マルチエージェント・システム設計** - 共有黒板モデルによる協調エージェントシステム
 - **A.6: 監査ログシステム** - variables.json拡張による透明性と責任追跡性の確保
+- **A.7: 自己検証システム（Self-Lint）** - 実行前静的分析によるセキュリティと品質の確保
