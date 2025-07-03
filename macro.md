@@ -1922,6 +1922,12 @@ API取得に失敗した場合（Catch）:
 [DEBUG] 次のアクション: [次に実行する処理]
 ```
 
+### 📁 実践サンプル
+
+Debug & Tracing の詳細な実践例：
+
+- **初級**: [変数デバッグシステム](./examples/debug_tracing/variable_debugging.md) - 基本的な変数状態追跡とデバッグ出力の習得
+
 ---
 
 ## 免責事項
