@@ -958,7 +958,6 @@ pendingタスクが残る限り、フェーズ2を繰り返し実行
 Problem Solving & Recursion の詳細な実践例：
 
 - **初級**: [タスク分解システム](./examples/problem_recursion/task_decomposition.md) - カレーレシピ作成による再帰分割の実践（実行時間: 3-5分）
-- **中級**: [プロジェクト管理システム](./examples/problem_recursion/project_management.md) - 複雑な階層管理とイベント企画の完全分解（実行時間: 8-12分）
 
 ---
 
