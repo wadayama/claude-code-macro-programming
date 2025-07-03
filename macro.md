@@ -842,8 +842,7 @@ TODOリストのタスクを上から順次実行してください
 
 TODOリストベースLoop Processing の詳細な実践例：
 
-- **初級**: [学習進捗管理システム](./examples/loop_modular/learning_progress.md) - 固定回数ループによるスコア向上
-- **中級**: [品質改善システム](./examples/loop_modular/quality_improvement.md) - 条件付きループによる目標達成型処理
+- **初級**: [学習進捗管理システム](./examples/loop_modular/learning_progress.md) - 条件付きループによる目標達成型処理
 
 
 
