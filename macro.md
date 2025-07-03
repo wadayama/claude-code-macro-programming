@@ -1750,6 +1750,26 @@ API取得に失敗した場合（Catch）:
 
 ---
 
+### 📁 実践サンプル
+
+Error Handlingパターンの詳細な実践例：
+
+- **基本**: [堅牢な情報収集システム](./examples/error_handling/robust_search_system.md) - Web検索失敗時のTry-Catch-FinallyとGraceful Degradation実践
+
+#### エラーハンドリング体験方法
+
+**通常実行**: そのまま実行するとWeb検索成功による理想レベル体験
+
+**エラー体験**: Catch処理とGraceful Degradationを実際に体験したい場合
+1. Claude Code UIで `/permissions` を実行し現在権限確認
+2. **対話的UIでWebSearchツールを「Deny」に設定**（権限変更はUI操作のみ可能）
+3. マクロ実行（Web検索失敗→Catch処理→実用レベル品質調整）
+4. **対話的UIでWebSearchツールを「Allow」に復元**
+
+**注意**: Claude Codeの権限変更は、セキュリティ上の理由により対話的UI操作でのみ可能です。コマンドライン形式（`/permissions remove WebSearch`等）は動作しません。この手順により、Try-Catch-Finally完全フローとGraceful Degradationの段階的品質調整を実際に体験できます。
+
+---
+
 ## Pattern 10: Debug & Tracing（デバッグ・トレーシング）
 
 **概要**: マクロ実行過程の状態追跡と問題診断機能。LLMが自然言語でデバッグ情報を実況し、変数値や判断根拠を明示することで、意図しない動作の原因特定と理解促進を実現する。
