@@ -48,3 +48,6 @@ CLAUDE_backup_*.md
 
 # Temporary Python scripts (exclude but keep important examples like haiku_analyzer.py)
 var.py
+
+# Experiments directory (development use only, not for end users)
+experiments/
