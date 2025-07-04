@@ -61,10 +61,9 @@ MIT License - 詳細は [LICENSE](./LICENSE) を参照。
 ## 👥 著者
 
 - **Tadashi Wadayama** - プロジェクト設計・文書作成
-- **Claude Code (Anthropic Inc.)** - 技術実装・検証
 
 ---
 
-**Version**: 1.0  
-**Created**: 2025-06-18  
-**Last Updated**: 2025-07-04
+**Last Updated**: 2025-07-04  
+**Author**: Tadashi Wadayama (with assistance from Claude Code)  
+**License**: MIT License (2025)
