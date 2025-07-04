@@ -28,7 +28,8 @@ conference_*.md
 departure_*.md
 draft_*.md
 
-# Runtime generated JSON files (exclude but keep example configs)
+# Runtime generated JSON files (exclude but keep example configs)  
+variables.json
 departure_variable.json
 social_variable.json
 user_state.json
@@ -38,3 +39,12 @@ ai_market_report.json
 research_theme.json
 target_companies.json
 competitive_insights.json
+
+# Backup files
+CLAUDE_backup_*.md
+
+# Research summary files
+*research_summary.md
+
+# Temporary Python scripts (exclude but keep important examples like haiku_analyzer.py)
+var.py
