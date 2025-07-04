@@ -513,6 +513,40 @@ haiku_analyzer.pyを実行してください。
 
 数値計算処理、大規模データ処理、外部API連携等、**型の不整合が深刻な問題となりうる特定の用途**において選択的に導入。日常的なマクロ使用では基本形式で十分。「{{user_age}}の型をintegerに設定してください」のような自然言語指定により、必要に応じて段階的に型安全性を強化可能。
 
+#### スキーマファイルによる体系的型管理
+
+**より高度な型管理**が必要な場合、variables.jsonの構造を事前定義するスキーマファイルの導入が有効：
+
+```json
+// variables.schema.json の例
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "analysis_config": {
+      "type": "object",
+      "properties": {
+        "precision": {"type": "number", "minimum": 0.1, "maximum": 1.0},
+        "iterations": {"type": "integer", "minimum": 1},
+        "output_format": {"type": "string", "enum": ["json", "csv", "xml"]}
+      },
+      "required": ["precision", "iterations"]
+    }
+  }
+}
+```
+
+**段階的導入戦略**：
+- **基本利用**: スキーマファイルなし、シンプルな変数管理
+- **中級利用**: 重要データのみスキーマ定義、部分的型検証
+- **高度利用**: 完全なスキーマベース型管理、厳密な検証
+
+**実装上の利点**：
+- JSON Schemaとの標準互換性
+- Python側での自動型検証
+- プロジェクト全体での一貫した型管理
+- 複雑なデータ構造の安全な取り扱い
+
 Python Tool Integration により、自然言語マクロプログラミングはPythonエコシステム全体への汎用的なアクセスを実現し、専門的な計算処理から業務自動化まで幅広い応用が可能になる。
 
 ## A.5: マルチエージェント・システム設計
