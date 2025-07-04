@@ -46,6 +46,14 @@
 - [A.7: 自己検証システム（Self-Lint）](./Appendix.md#a7-自己検証システムself-lint) - 実行前静的分析によるセキュリティと品質の確保
 - [A.8: メタプログラミング](./Appendix.md#a8-メタプログラミング) - 動的マクロ生成・検証・評価・改善による自己適応システム
 
+### 📚 主要コンテンツ
+- **[macro.md](./macro.md)** - メインガイド（10デザインパターン + 付録参照）
+- **[Appendix.md](./Appendix.md)** - 付録（高度なシステム統合とリスク管理）
+- **[examples/](./examples/)** - パターン別実例集
+- **[haiku_direct.md](./haiku_direct.md)** - 実例（俳句生成システム）
+- **[CLAUDE.md](./CLAUDE.md)** - マクロ定義ファイル
+- **[debugger.md](./debugger.md)** - デバッグモード仕様書
+
 ---
 
 # 第1部：基本概念と理論的背景
