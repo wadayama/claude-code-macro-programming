@@ -985,7 +985,7 @@ pendingタスクが残る限り、フェーズ2を繰り返し実行
 
 Problem Solving & Recursion の詳細な実践例：
 
-- **初級**: [タスク分解システム](./examples/problem_recursion/task_decomposition.md) - カレーレシピ作成による再帰分割の実践（実行時間: 3-5分）
+- **初級**: [タスク分解システム](./examples/problem_recursion/task_decomposition.md) - カレーレシピ作成による再帰分割の実践
 
 ---
 
@@ -1133,9 +1133,9 @@ game_history.jsonを読み込んで{{game_history}}に設定してください�
 
 Learning from Experience の詳細な実践例：
 
-- **初級**: [文章スタイル分析・改善システム](./examples/learning_experience/writing_style_learning.md) - JSON永続化による文章経験の記録・蓄積・活用（実行時間: 5-8分）
-- **中級**: [プロンプト継続改良システム](./examples/learning_experience/prompt_improvement_learning.md) - Loop Pattern統合による段階的プロンプト最適化学習（実行時間: 8-12分）
-- **上級**: [ブラインド最適化学習システム](./examples/learning_experience/blind_optimization_learning.md) - ブラインド探索環境での最適解発見学習（実行時間: 3-6分）
+- **初級**: [文章スタイル分析・改善システム](./examples/learning_experience/writing_style_learning.md) - JSON永続化による文章経験の記録・蓄積・活用
+- **中級**: [プロンプト継続改良システム](./examples/learning_experience/prompt_improvement_learning.md) - Loop Pattern統合による段階的プロンプト最適化学習
+- **上級**: [ブラインド最適化学習システム](./examples/learning_experience/blind_optimization_learning.md) - ブラインド探索環境での最適解発見学習
 
 ---
 
