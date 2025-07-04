@@ -13,6 +13,7 @@
 - [A.7: 自己検証システム（Self-Lint）](#a7-自己検証システムself-lint)
 - [A.8: メタプログラミング](#a8-メタプログラミング)
 - [A.9: アンサンブル実行と合意形成](#a9-アンサンブル実行と合意形成)
+- [A.10: 型安全性とスキーマ管理](#a10-型安全性とスキーマ管理)
 
 ---
 
@@ -499,55 +500,6 @@ haiku_analyzer.pyを実行してください。
 - ライブラリの自由な選択と組み合わせ
 - モジュール化による再利用性
 
-#### 型安全性とデータ整合性（オプション機能）
-
-**将来的な拡張オプション**として、variables.json内での型情報直接記述による型安全性確保が可能。基本的なマクロ動作には不要だが、複雑なPython連携や高い信頼性が求められる場面での安全性向上に有効。
-
-```json
-{
-  "user_name": "田中太郎",           // 基本形式（推奨）
-  "user_age": {                     // 型指定（オプション）
-    "value": 30,
-    "type": "integer"
-  }
-}
-```
-
-数値計算処理、大規模データ処理、外部API連携等、**型の不整合が深刻な問題となりうる特定の用途**において選択的に導入。日常的なマクロ使用では基本形式で十分。「{{user_age}}の型をintegerに設定してください」のような自然言語指定により、必要に応じて段階的に型安全性を強化可能。
-
-#### スキーマファイルによる体系的型管理
-
-**より高度な型管理**が必要な場合、variables.jsonの構造を事前定義するスキーマファイルの導入が有効：
-
-```json
-// variables.schema.json の例
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "analysis_config": {
-      "type": "object",
-      "properties": {
-        "precision": {"type": "number", "minimum": 0.1, "maximum": 1.0},
-        "iterations": {"type": "integer", "minimum": 1},
-        "output_format": {"type": "string", "enum": ["json", "csv", "xml"]}
-      },
-      "required": ["precision", "iterations"]
-    }
-  }
-}
-```
-
-**段階的導入戦略**：
-- **基本利用**: スキーマファイルなし、シンプルな変数管理
-- **中級利用**: 重要データのみスキーマ定義、部分的型検証
-- **高度利用**: 完全なスキーマベース型管理、厳密な検証
-
-**実装上の利点**：
-- JSON Schemaとの標準互換性
-- Python側での自動型検証
-- プロジェクト全体での一貫した型管理
-- 複雑なデータ構造の安全な取り扱い
 
 ## A.5: マルチエージェント・システム設計
 
@@ -852,3 +804,217 @@ report_generation_template.mdを基に{{output_format}}向けマクロを生成
 ### 意義と位置づけ
 
 アンサンブル実行と合意形成は、確率的システムの特性を「制約」として回避するのではなく、**統計的堅牢性の基盤**として積極的に活用するアプローチである。この手法により、LLMの確率的動作特性を持つ自然言語マクロプログラミングにおいて、重要なタスクでの実用的信頼性を確保し、より広範な活用を可能にする。
+
+## A.10: 型安全性とスキーマ管理
+
+### 背景と重要性
+
+自然言語マクロプログラミングが複雑化し、Python Tool Integrationや重要業務での利用が拡大するにつれ、**型安全性とデータ整合性**の重要性が高まっている。基本的なマクロ動作では文字列ベースの変数管理で十分だが、数値計算、大規模データ処理、外部API連携等では型の不整合が深刻な問題となりうる。
+
+**このセクションの目的**：
+- 段階的な型安全性強化手法の提供
+- スキーマベースの体系的データ管理の実現
+- 基本利用から高度利用までの移行戦略の明確化
+- 実用的な型管理のベストプラクティス確立
+
+### 基本的な型指定機能
+
+#### 型情報の直接記述
+
+**将来的な拡張オプション**として、variables.json内での型情報直接記述による型安全性確保が可能。基本的なマクロ動作には不要だが、複雑なPython連携や高い信頼性が求められる場面での安全性向上に有効。
+
+```json
+{
+  "user_name": "田中太郎",           // 基本形式（推奨）
+  "user_age": {                     // 型指定（オプション）
+    "value": 30,
+    "type": "integer"
+  },
+  "analysis_results": {             // 配列型の例
+    "value": [1.2, 3.4, 5.6],
+    "type": "array",
+    "element_type": "number"
+  },
+  "config_flag": {                  // 真偽値型の例
+    "value": true,
+    "type": "boolean"
+  }
+}
+```
+
+#### 自然言語による型指定
+
+型安全性は自然言語マクロの基本思想に沿って、直感的な指定が可能：
+
+```markdown
+## 型安全な変数設定の例
+
+{{user_age}}の型をintegerに設定してください
+{{success_rate}}の型をnumberに設定してください
+{{feature_enabled}}の型をbooleanに設定してください
+
+## 型制約付きの値保存
+30を整数型として{{user_age}}に保存してください
+"有効"をbooleanのtrueとして{{status}}に保存してください
+```
+
+#### 適用対象と選択的導入
+
+数値計算処理、大規模データ処理、外部API連携等、**型の不整合が深刻な問題となりうる特定の用途**において選択的に導入。日常的なマクロ使用では基本形式で十分。必要に応じて段階的に型安全性を強化可能。
+
+### スキーマファイルベースの体系的管理
+
+#### 事前定義スキーマファイル
+
+**より高度な型管理**が必要な場合、variables.jsonの構造を事前定義するスキーマファイルの導入が有効：
+
+```json
+// variables.schema.json の例
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "analysis_config": {
+      "type": "object",
+      "properties": {
+        "precision": {"type": "number", "minimum": 0.1, "maximum": 1.0},
+        "iterations": {"type": "integer", "minimum": 1},
+        "output_format": {"type": "string", "enum": ["json", "csv", "xml"]}
+      },
+      "required": ["precision", "iterations"]
+    },
+    "user_profile": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "age": {"type": "integer", "minimum": 0, "maximum": 150},
+        "preferences": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      },
+      "required": ["name", "age"]
+    },
+    "processing_results": {
+      "type": "object",
+      "properties": {
+        "status": {"type": "string", "enum": ["pending", "processing", "completed", "failed"]},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "data": {"type": "array", "items": {"type": "number"}}
+      }
+    }
+  }
+}
+```
+
+#### スキーマ検証の統合
+
+Python Tool Integrationにおけるスキーマ検証の実装例：
+
+```python
+import json
+import jsonschema
+from pathlib import Path
+
+def validate_and_load_variables():
+    """スキーマ検証付きでvariables.jsonを読み込み"""
+    try:
+        # スキーマファイルの読み込み
+        with open("variables.schema.json", 'r', encoding='utf-8') as f:
+            schema = json.load(f)
+        
+        # variables.jsonの読み込み
+        with open("variables.json", 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # スキーマ検証
+        jsonschema.validate(instance=data, schema=schema)
+        
+        print("スキーマ検証成功")
+        return data
+        
+    except jsonschema.ValidationError as e:
+        print(f"スキーマ検証エラー: {e.message}")
+        return None
+    except Exception as e:
+        print(f"ファイル読み込みエラー: {e}")
+        return None
+```
+
+### 段階的導入戦略
+
+#### 3段階の導入レベル
+
+**基本利用**（推奨開始レベル）：
+- スキーマファイルなし、シンプルな変数管理
+- 文字列ベースの基本的な値保存・参照
+- 型エラーは実行時に自然発見・修正
+
+**中級利用**（特定用途での部分導入）：
+- 重要データのみスキーマ定義
+- 部分的型検証（数値計算部分、API連携部分等）
+- 基本部分は従来通り、重要部分のみ型安全性確保
+
+**高度利用**（ミッションクリティカル用途）：
+- 完全なスキーマベース型管理
+- 厳密な検証とエラーハンドリング
+- プロジェクト全体での一貫した型管理
+
+#### 移行戦略の実践例
+
+```markdown
+## 段階的移行の実践例
+
+### ステップ1: 基本利用から中級利用への移行
+重要な数値設定のみスキーマ定義を導入：
+
+{{analysis_precision}}を0.95（number型、0.1-1.0範囲）として保存
+{{iteration_count}}を100（integer型、最小1）として保存
+
+### ステップ2: 中級利用から高度利用への移行
+variables.schema.jsonの作成と全データの体系的管理：
+
+スキーマファイルに基づいてvariables.jsonの検証を実行
+型制約違反がある場合はエラー報告と修正提案
+```
+
+### 実装上の利点と技術的考慮事項
+
+#### 標準技術との互換性
+
+**JSON Schema標準互換性**：
+- W3C標準に準拠した業界標準技術の活用
+- 既存ツールとの連携と相互運用性
+- 豊富なバリデーション機能（形式、範囲、パターン等）
+
+**Python生態系との統合**：
+- jsonschemaライブラリによる自動型検証
+- pandasやNumPyとの型情報連携
+- REST API との型安全な情報交換
+
+#### パフォーマンスと保守性
+
+**実行効率の最適化**：
+- 必要な部分のみの選択的検証
+- キャッシュ機能による検証処理の高速化
+- 大規模データでの部分検証戦略
+
+**長期保守性の確保**：
+- プロジェクト全体での一貫した型管理
+- 複雑なデータ構造の安全な取り扱い
+- チーム開発での型仕様共有と品質保証
+
+#### 将来拡張への対応
+
+**進化する型システム**：
+- 新しいデータ型への対応準備
+- AI/ML分野での特殊データ型の統合
+- マルチモーダルデータ（画像、音声等）への型管理拡張
+
+**エコシステムとの統合**：
+- TypeScriptやPythonの型システムとの相互連携
+- IDE支援機能との統合可能性
+- 自動コード生成ツールとの連携
+
+型安全性とスキーマ管理により、自然言語マクロプログラミングは基本的な使いやすさを保ちながら、エンタープライズレベルでの信頼性と保守性を実現する。
