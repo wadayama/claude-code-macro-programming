@@ -27,7 +27,7 @@ Claude Codeで上記をそのまま実行すると、自然言語マクロプロ
 
 **付録：実装技術**
 - A.1: Claude Codeスラッシュコマンドによるシステム制御
-- A.2: Event-Driven実行とシステム統合
+- A.2: Event-Driven実行
 - A.3: 重要なタスクでのリスク軽減戦略
 - A.4: Python Tool Integration（Python ツール統合）
 - A.5: マルチエージェント・システム設計（variables.json黒板モデル）
