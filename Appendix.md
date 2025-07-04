@@ -10,7 +10,7 @@
 - [A.4: Python Tool Integration（Python ツール統合）](#a4-python-tool-integrationpython-ツール統合)
 - [A.5: マルチエージェント・システム設計](#a5-マルチエージェントシステム設計)
 - [A.6: 監査ログシステム](#a6-監査ログシステム)
-- [A.7: 自己検証システム（Self-Lint）](#a7-自己検証システムself-lint)
+- [A.7: LLMベース検証システム（LLM-based Lint）](#a7-llmベース検証システムllm-based-lint)
 - [A.8: メタプログラミング](#a8-メタプログラミング)
 - [A.9: アンサンブル実行と合意形成](#a9-アンサンブル実行と合意形成)
 - [A.10: 型安全性とスキーマ管理](#a10-型安全性とスキーマ管理)
@@ -600,11 +600,11 @@ haiku_analyzer.pyを実行してください。
 
 - **基本**: [監査ログシステム](./examples/audit_logging/audit_system.md) - variables.json拡張による監査証跡記録の実践
 
-## A.7: 自己検証システム（Self-Lint）
+## A.7: LLMベース検証システム（LLM-based Lint）
 
 ### 基本アーキテクチャ
 
-自然言語マクロプログラミングにおいて、マクロ実行前にAI自身が静的分析を行う自己検証システムを構築できる。これは「コードを読むコード」というメタプログラミングの一形態であり、variables.jsonを通じて検証結果を管理し、条件分岐により安全性を確保する。
+自然言語マクロプログラミングにおいて、マクロ実行前にLLMが静的分析を行うLLMベース検証システムを構築できる。これは「コードを読むコード」というメタプログラミングの一形態であり、variables.jsonを通じて検証結果を管理し、条件分岐により安全性を確保する。
 
 ### 主要検証項目
 
@@ -664,12 +664,12 @@ data_analysis_template.mdを基に{{target_data}}向けマクロを生成
 {{task_type}}が「報告」の場合：
 report_generation_template.mdを基に{{output_format}}向けマクロを生成
 
-生成されたマクロを{{generated_macro}}に保存し、A.7 Self-Lintで検証後実行
+生成されたマクロを{{generated_macro}}に保存し、A.7 LLMベース検証で検証後実行
 ```
 
-#### 2. Self-Inspection統合
+#### 2. LLMベース検証統合
 
-**A.7 Self-Lint**との連携により、生成されたマクロの品質保証を自動化。メタ検証（マクロがマクロを検証）により、高度な信頼性を確保する。
+**A.7 LLMベース検証**との連携により、生成されたマクロの品質保証を自動化。メタ検証（マクロがマクロを検証）により、高度な信頼性を確保する。
 
 ```markdown
 ## メタ検証プロセス
@@ -720,7 +720,7 @@ report_generation_template.mdを基に{{output_format}}向けマクロを生成
 {{error_analysis}}で特定された問題に対応：
 根本原因の修正を{{improved_macro}}に反映
 
-改善されたマクロをA.7 Self-Lintで最終検証し、{{final_macro}}として出力
+改善されたマクロをA.7 LLMベース検証で最終検証し、{{final_macro}}として出力
 ```
 
 ### 実用例

@@ -43,7 +43,7 @@
 - [A.4: Python Tool Integration（Python ツール統合）](./Appendix.md#a4-python-tool-integrationpython-ツール統合) - variables.json連携によるPythonエコシステム活用
 - [A.5: マルチエージェント・システム設計](./Appendix.md#a5-マルチエージェントシステム設計) - 共有黒板モデルによる協調エージェントシステム
 - [A.6: 監査ログシステム](./Appendix.md#a6-監査ログシステム) - variables.json拡張による透明性と責任追跡性の確保
-- [A.7: 自己検証システム（Self-Lint）](./Appendix.md#a7-自己検証システムself-lint) - 実行前静的分析によるセキュリティと品質の確保
+- [A.7: LLMベース検証システム（LLM-based Lint）](./Appendix.md#a7-llmベース検証システムllm-based-lint) - LLMによる実行前静的分析によるセキュリティと品質の確保
 - [A.8: メタプログラミング](./Appendix.md#a8-メタプログラミング) - 動的マクロ生成・検証・評価・改善による自己適応システム
 - [A.9: アンサンブル実行と合意形成](./Appendix.md#a9-アンサンブル実行と合意形成) - 確率的動作への統計的対抗策
 - [A.10: 型安全性とスキーマ管理](./Appendix.md#a10-型安全性とスキーマ管理) - 段階的型安全性強化とスキーマベース体系的データ管理
