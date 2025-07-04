@@ -25,7 +25,6 @@
 ### 第2部：10のデザインパターン
 - [📋 Claude Code自然言語マクロプログラミングの代表的な構文](#-claude-code自然言語マクロプログラミングの代表的な構文)
 - [📚 基本構文サンプル集](#-基本構文サンプル集)
-- [🔄 基本デザインパターン](#-基本デザインパターン)
 - [Pattern 1: Sequential Pipeline（順次パイプライン）](#pattern-1-sequential-pipeline順次パイプライン)
 - [Pattern 2: Parallel Processing（並列処理）](#pattern-2-parallel-processing並列処理)
 - [Pattern 3: Conditional Execution（条件分岐）](#pattern-3-conditional-execution条件分岐)
@@ -346,8 +345,6 @@ AI市場の規模と成長予測を{{market_size}}に保存してください。
 ```
 
 ---
-
-## 🔄 基本デザインパターン
 
 ### Pattern 1: Sequential Pipeline（順次パイプライン）
 
