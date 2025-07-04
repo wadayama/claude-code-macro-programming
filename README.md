@@ -1,5 +1,7 @@
 # Claude Code 自然言語マクロプログラミングガイド
 
+> 🌐 **English Version Available**: [English documentation is available here](https://github.com/wadayama/claude-code-macro-programming-en)
+
 **Claude Code**を自然言語インタープリタとして活用し、エージェントシステムを構築する手法を示したガイドです。
 
 ## ⚡ クイックスタート
