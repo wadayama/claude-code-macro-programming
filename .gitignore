@@ -50,4 +50,4 @@ CLAUDE_backup_*.md
 var.py
 
 # Experiments directory (development use only, not for end users)
-experiments/
+experiments/sample_verification_report.md
