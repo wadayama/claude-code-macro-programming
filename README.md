@@ -46,7 +46,7 @@ Claude Codeで上記をそのまま実行すると、自然言語マクロプロ
 ## 📚 主要コンテンツ
 
 - **[macro.md](./macro.md)** - メインガイド（10デザインパターン + 付録参照）
-- **[Appendix.md](./Appendix.md)** - 付録（高度なシステム統合とリスク管理）
+- **[Appendix.md](./Appendix.md)** - 付録（高度な技術要素と手法）
 - **[examples/](./examples/)** - パターン別実例集 
 - **[haiku_direct.md](./haiku_direct.md)** - 実例（俳句生成システム）
 - **[CLAUDE.md](./CLAUDE.md)** - マクロ定義ファイル
