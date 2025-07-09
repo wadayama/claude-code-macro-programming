@@ -48,7 +48,7 @@
 - [A.10: 型安全性とスキーマ管理](./Appendix.md#a10-型安全性とスキーマ管理) - 段階的型安全性強化とスキーマベース体系的データ管理
 - [A.11: 並行アクセス制御と楽観的ロック](./Appendix.md#a11-並行アクセス制御と楽観的ロック) - variables.json並行アクセス制御による安全性確保
 - [A.12: LLMベース評価テスト](./Appendix.md#a12-llmベース評価テスト) - 確率的システムの品質・創造性・論理性評価
-- [A.13: 分散変数サーバー](./Appendix.md#a13-分散変数サーバーdistributed-variable-server) - variables.json分散システムによる複数マシン協調動作
+- [A.13: 変数サーバー](./Appendix.md#a13-変数サーバーvariable-server) - variables.jsonサーバー化による複数マシンアクセス
 
 ### 免責事項
 - [📜 免責事項](#-免責事項)
