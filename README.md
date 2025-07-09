@@ -49,8 +49,8 @@ TODO-listベースの反復処理とFew-shot Pattern Loopによる効率的な�
 #### Pattern 6: Learning from Experience（経験学習・知識蓄積）
 過去の実行結果を学習し、改善提案を生成する経験学習パターン
 
-#### Pattern 7: Environment Sensing（環境センシング・知識ベース）
-外部環境の情報を取得し、状況に応じた適応的処理を実行
+#### Pattern 7: Environment Sensing, Knowledge-base & Environment Model（環境センシング・知識ベース・環境モデル）
+外部環境の情報を取得し、知識体系を構築し、状況に応じた適応的処理を実行
 
 #### Pattern 8: Human-in-the-Loop（人間協調型エージェント）
 人間の判断を適切なタイミングで組み込む協調型実行パターン
