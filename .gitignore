@@ -51,3 +51,8 @@ var.py
 
 # Experiments directory (development use only, not for end users)
 experiments/sample_verification_report.md
+
+# Local development files (not for public repository)
+bilingual_development_insights.md
+decision_log.json
+sample_verification_report.md
