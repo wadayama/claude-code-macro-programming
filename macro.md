@@ -36,7 +36,7 @@
 - [Pattern 10: Debug & Tracing（デバッグ・トレーシング）](#pattern-10-debug--tracingデバッグトレーシング)
 
 ### 付録（高度な技術）- [Appendix.md](./Appendix.md)
-- [A.1: Claude Codeスラッシュコマンドによるシステム制御](./Appendix.md#a1-claude-codeスラッシュコマンドによるシステム制御) - システム状態の確認・制御機能
+- [A.1: システム制御とリソース管理](./Appendix.md#a1-システム制御とリソース管理) - リアルタイムシステム制御と経済合理的リソース管理
 - [A.2: Event-Driven実行](./Appendix.md#a2-event-driven実行) - 非同期処理とリアルタイム応答システム
 - [A.3: 重要なタスクでのリスク軽減戦略](./Appendix.md#a3-重要なタスクでのリスク軽減戦略) - 4層防御戦略による安全な運用手法
 - [A.4: Python Tool Integration（Python ツール統合）](./Appendix.md#a4-python-tool-integrationpython-ツール統合) - variables.json連携によるPythonエコシステム活用
