@@ -5,6 +5,9 @@
 .vscode/
 .idea/
 
+# Claude Code configuration (local settings only)
+.claude/
+
 # Temporary files - only specific output files, not examples
 *.tmp
 *_temp.*
