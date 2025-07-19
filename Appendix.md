@@ -2487,50 +2487,6 @@ BEGIN
 END;
 ```
 
-### 導入・移行手順
-
-#### Step 1: 環境準備
-
-```bash
-# uv環境での必要パッケージインストール
-uv add sqlite3  # 標準ライブラリなので通常不要
-```
-
-#### Step 2: 既存variables.jsonからの移行
-
-```python
-# 移行スクリプト例
-import json
-from variable_db import VariableDB
-
-def migrate_from_json():
-    """variables.jsonからSQLiteへの移行."""
-    try:
-        with open("variables.json", 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        db = VariableDB()
-        for name, value in data.items():
-            db.save_variable(name, str(value))
-            
-        print(f"移行完了: {len(data)}個の変数をSQLiteに移行しました")
-    except FileNotFoundError:
-        print("variables.jsonが見つかりません。新規データベースを作成します。")
-```
-
-#### Step 3: マクロ構文の更新
-
-**従来版（variables.json）:**
-```markdown
-「{{user_name}}に田中太郎を保存してください」
-→ Read/Write tools を使用してJSONファイル操作
-```
-
-**SQLite版（variables.db）:**
-```markdown
-「{{user_name}}に田中太郎を保存してください」
-→ Bash tool: uv run python -c "from variable_db import save_variable; save_variable('user_name', '田中太郎')"
-```
 
 ### 楽観的ロック実装
 
