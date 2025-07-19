@@ -1,3 +1,0 @@
-Git実験用ファイル
-作成ブランチ: experiment-feature
-実験目的: Gitワールドモデルの状態変化追跡
