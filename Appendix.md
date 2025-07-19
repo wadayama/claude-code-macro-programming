@@ -2488,63 +2488,9 @@ END;
 ```
 
 
-### 楽観的ロック実装
+### 将来の拡張可能性
 
-A.13で概説した楽観的ロック機構の具体実装：
-
-```sql
--- バージョン管理付き変数テーブル
-CREATE TABLE variables (
-    name TEXT PRIMARY KEY,
-    value TEXT NOT NULL,
-    version INTEGER DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 楽観的ロック付き更新
-UPDATE variables 
-SET value = ?, version = version + 1, updated_at = CURRENT_TIMESTAMP
-WHERE name = ? AND version = ?;
-```
-
-```python
-def save_variable_with_lock(name: str, value: str, expected_version: int) -> bool:
-    """楽観的ロック機構付き変数保存."""
-    with sqlite3.connect(self.db_path, timeout=self.timeout) as conn:
-        cursor = conn.execute(
-            """UPDATE variables 
-               SET value = ?, version = version + 1, updated_at = CURRENT_TIMESTAMP
-               WHERE name = ? AND version = ?""",
-            (value, name, expected_version)
-        )
-        conn.commit()
-        return cursor.rowcount > 0  # 更新成功の場合True
-```
-
-### 監査ログシステム
-
-完全な変更履歴の自動記録：
-
-```sql
--- 変更ログテーブル
-CREATE TABLE variable_changes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    variable_name TEXT NOT NULL,
-    old_value TEXT,
-    new_value TEXT,
-    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    agent_id TEXT
-);
-
--- 自動ログ記録トリガー
-CREATE TRIGGER log_variable_changes 
-AFTER UPDATE ON variables
-BEGIN
-    INSERT INTO variable_changes (variable_name, old_value, new_value, agent_id)
-    VALUES (NEW.name, OLD.value, NEW.value, 'current_agent_id');
-END;
-```
+現在の実装をベースとして、楽観的ロック機構（バージョン管理による並行制御）や監査ログシステム（完全な変更履歴記録）といった、より高度な機能への拡張も可能である。
 
 ### パフォーマンス特性
 
