@@ -1174,7 +1174,10 @@ cat agents/code_reviewer.md | claude -p --dangerously-skip-permissions
 
 #### 事前定義スキーマファイル
 
-**より高度な型管理**が必要な場合、variables.jsonの構造を事前定義するスキーマファイルの導入が有効：
+**より高度な型管理**が必要な場合、以下のようなスキーマ事前定義が有効：
+
+**variables.json向け**: JSONスキーマファイルによる構造定義
+**SQLite向け**: DDL（Data Definition Language）によるテーブル定義とスキーマ設計（より強力な型制約、外部キー、CHECK制約等が利用可能）
 
 ```json
 // variables.schema.json の例
