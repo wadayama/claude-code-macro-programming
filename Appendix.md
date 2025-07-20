@@ -1947,140 +1947,259 @@ def listen_for_changes():
 
 ## A.14: ベクトルデータベースとRAG活用
 
-### 背景と目的
+自然言語マクロプログラミングに**ChromaDB統合RAGシステム**を組み込み、意味的類似性検索による知識活用と経験学習を実現します。Chroma/フォルダの実装により、従来のSQLite変数管理に加えて動的な知識検索・経験活用機能が利用可能になります。
 
-静的な知識ベース（既存のknowledge_base_patterns）から動的知識システムへの発展により、自然言語マクロプログラミングの能力を大幅に拡張する。RAG（Retrieval-Augmented Generation）による外部知識活用と経験学習の融合により、「知識豊富で経験豊かなエージェント」の実現を目指す。
+### 基本アーキテクチャ
 
-### 二重のベクトル活用アーキテクチャ
+#### ChromaDB統合実装システム（`Chroma/simple_chroma_rag.py`）
 
-#### 1. RAGナレッジベース
+**二重コレクション設計**により知識と経験を分離管理：
 
-**基本フロー:**
-```
-外部文書/知識 → チャンク分割 → ベクトル化 → 知識DB保存
-クエリ → 類似度検索 → 関連知識取得 → 回答生成
-```
-
-**活用例:**
-- 専門文書からの知識抽出と活用
-- リアルタイム情報検索による回答生成
-- 既存knowledge_base_patternsの動的化
-
-#### 2. 経験学習システム
-
-**基本フロー:**
-```
-タスク完了 → 経験要約 → ベクトル化 → 経験DB保存
-新タスク → 類似経験検索 → 戦略立案 → 実行
-```
-
-**活用例:**
-- Pattern 6の発展: 意味的経験保存・想起
-- 類似タスクでの成功パターン活用
-- 連想的問題解決支援（例：「電子の海」→「データの霧」の類推）
-
-### 技術選択肢とアーキテクチャ
-
-#### ベクトルデータベース選択
-
-**Chroma**
-- 軽量でセットアップが容易
-- ローカル開発に最適
-- オープンソースで拡張性が高い
-
-**Pinecone**
-- クラウドベースの高性能
-- 大規模データセットに対応
-- 企業向けの信頼性と可用性
-
-**Weaviate**
-- セマンティック検索に特化
-- グラフベースの関連性発見
-- 複合クエリに対応
-
-#### エンベディング戦略
-
-**文書分割手法:**
-- チャンクサイズの最適化（512-1024トークン）
-- 重複部分による文脈保持
-- セクション単位での意味的分割
-
-**ベクトル化:**
-- OpenAI Embeddings（text-embedding-3-small/large）
-- 多言語対応エンベディング
-- カスタムファインチューニング
-
-### 主要活用パターン
-
-#### RAGナレッジベース活用
-
-**専門文書の動的活用:**
-```
-「この技術文書に基づいて、{{project_requirements}}に最適な実装方法を提案してください」
-→ 関連文書セクションを検索し、要件に応じた具体的提案を生成
+```python
+# メインクラス構成
+class SimpleChromaRAG:
+    def __init__(self, persist_directory: str = "./chroma_db"):
+        # 永続化ベクトルデータベース
+        self.client = chromadb.PersistentClient(path=str(persist_directory))
+        
+        # 知識用コレクション
+        self.knowledge_collection = self.client.get_or_create_collection(
+            name="knowledge_base",
+            metadata={"description": "General knowledge documents"}
+        )
+        
+        # 経験用コレクション
+        self.experience_collection = self.client.get_or_create_collection(
+            name="experience_base", 
+            metadata={"description": "Task execution experiences"}
+        )
 ```
 
-**リアルタイム知識検索:**
-```
-「{{current_issue}}について、過去の類似問題の解決策を知識ベースから検索してください」
-→ 意味的類似性により関連する解決策を発見・提示
-```
+**SQLite変数システムとの統合**：
+- `variable_db.py`: 基本的な変数管理（Chroma専用のシンプル版）
+- `simple_chroma_rag.py`: ベクトル検索・知識管理
+- `watch_integrated.py`: 両システムの統合監視
 
-#### 経験学習活用
+**永続化設計**：
+- ベクトルデータベース: `./chroma_db`ディレクトリに自動保存
+- 変数データベース: `variables.db`ファイルで管理
+- セッション間でのデータ継続保持
 
-**類似経験の想起:**
-```
-新タスク: 「テーマ『デジタル時代』で俳句を作成」
-→ 過去の成功例「テーマ『電子の海』で比喻を活用し高評価」を想起
-→ 比喻手法を現在のテーマに適用した戦略立案
-```
+### 実装パターン
 
-**継続的学習:**
-```
-タスク完了時: 「今回のプロジェクトでは、早期のプロトタイプ作成が成功の鍵となった」
-→ この教訓をベクトル化して経験DBに保存
-→ 将来の類似プロジェクトで自動的に参照・活用
-```
+#### CLAUDE.md自然言語構文による統合操作
 
-### システム統合
+Chromaシステムは**シンプル化された自然言語構文**で操作できます：
 
-#### 既存技術との連携
-
-**A.6監査ログとの連携:**
-実行履歴を経験データとして自動変換し、成功・失敗パターンの学習に活用する。
-
-**A.13データベース統合:**
-構造化データ（variables.json）とベクトルデータのハイブリッド活用により、包括的な状態管理を実現する。
-
-**A.5マルチエージェント:**
-共有知識・経験プールの構築により、エージェント間での知識と経験の相互活用を可能にする。
-
-**既存knowledge_base_patterns:**
-静的パターンから動的検索への進化パスを提供し、既存の知識資産を最大限活用する。
-
-### 新変数構文提案
-
-#### 基本検索構文
-
-```
-{{knowledge:query}} - RAG知識検索
-「{{knowledge:TypeScript最適化手法}}を参考に実装方針を決定してください」
-
-{{memory:query}} - 類似経験検索
-「{{memory:ユーザーインターフェース改善}}の過去の成功例を参考にしてください」
-
-{{learning:summary}} - 経験要約保存
-「今回の学び『{{learning:早期フィードバック重要性}}』を経験として保存してください」
+**知識検索（`{{knowledge:query}}`）**：
+```bash
+# CLAUDE.md構文: {{knowledge:Python最適化}}
+# 内部実行: 
+uv run python -c "from simple_chroma_rag import search_knowledge_base; print(search_knowledge_base('Python最適化'))"
 ```
 
-#### 統合検索構文
-
+**経験検索（`{{memory:task}}`）**：
+```bash
+# CLAUDE.md構文: {{memory:API開発}}
+# 内部実行:
+uv run python -c "from simple_chroma_rag import find_similar_experience; print(find_similar_experience('API開発'))"
 ```
-{{hybrid:query}} - 知識+経験の統合検索
-「{{hybrid:プロジェクト管理改善}}について、文書知識と過去経験の両方から提案してください」
+
+**知識保存**：
+```bash
+# 自然言語指示: "この内容を知識ベースに保存してください"
+# 内部実行:
+uv run python -c "from simple_chroma_rag import add_knowledge_from_text; print(add_knowledge_from_text('content', 'manual_input'))"
 ```
 
-ベクトルデータベースとRAG活用により、自然言語マクロプログラミングは単なるタスク実行から「豊富な知識と経験を持つ賢いシステム」へと進化し、より実用的で適応性の高い問題解決能力を獲得する。
+**経験保存**：
+```bash
+# 自然言語指示: "この成功例を経験として保存してください"
+# 内部実行:
+uv run python -c "from simple_chroma_rag import save_experience; print(save_experience('task_description', 'outcome_summary', True))"
+```
+
+#### 変数システム連携パターン
+
+**ネスト構文による動的検索**：
+```markdown
+# 変数値での知識検索
+{{knowledge:{{project_type}}}}
+
+# 変数値での経験検索  
+{{memory:{{current_task}}}}
+
+# 実行フロー例
+1. {{project_type}}の値を取得: "Python Web API"
+2. 知識検索実行: search_knowledge_base("Python Web API")
+3. 関連知識を返却: FastAPI実装パターン等
+```
+
+### 統合監視システム
+
+#### `watch_integrated.py`による実時間監視
+
+**SQLite変数とChromaベクトルDBの統合監視**：
+
+```bash
+# システム状態の一覧表示
+python watch_integrated.py --status
+
+# 連続監視（2秒間隔）
+python watch_integrated.py --watch --interval 2.0
+
+# 統合検索テスト
+python watch_integrated.py --search "Python API"
+```
+
+**監視画面の出力例**：
+```
+======================================================================
+ Natural Language Macro System Status - 2025-01-20 14:30:15 
+======================================================================
+
+📊 SQLite Variables:
+   Count: 3
+   {{ project_name }} = Python Web APIプロジェクト
+   {{ skill_level }} = 中級者
+   {{ research_topic }} = API最適化手法
+
+🧠 Chroma Vector Database:
+   Knowledge: 5
+   Experience: 3
+   Total Vector Items: 8
+
+📚 Recent Knowledge:
+   1. [a1b2c3d4...] from manual_input
+      Python Web API開発では、FastAPIフレームワークが高性能と開発効率を両立します...
+
+💡 Recent Experience:
+   1. [x9y8z7w6...] (SUCCESS)
+      Task: Python API開発
+      Result: FastAPI + PostgreSQL + Dockerの構成で2週間で本格的なREST API...
+```
+
+#### 変更監視機能
+
+**リアルタイム変更追跡**：
+```
+[14:32:15] NEW VARIABLE: {{ user_feedback }} = "UIの応答性が向上した"
+[14:32:18] NEW KNOWLEDGE: [def45678...] from manual_input
+         API応答時間最適化には、データベースクエリ最適化、キャッシュ戦略...
+[14:32:22] NEW EXPERIENCE: [abc12345...] (SUCCESS)
+         Task: レスポンス改善
+         Result: Redisキャッシュ導入により50%の性能向上を達成...
+         System state: 4 vars, 6 knowledge, 4 experience
+```
+
+### 実践サンプル
+
+#### 完全ワークフロー例（`test_macro.md`）
+
+**Python Web API開発プロジェクトでの実用例**：
+
+```markdown
+# 1. プロジェクト初期化
+全ての変数をクリアしてください
+{{project_name}}にPython Web APIプロジェクトを保存してください
+{{skill_level}}に中級者を保存してください
+{{research_topic}}にAPI最適化手法を保存してください
+
+# 2. 知識ベース構築
+この内容を知識ベースに保存してください：
+「Python Web API開発では、FastAPIフレームワークが高性能と開発効率を両立します。自動API仕様生成、型ヒント活用、非同期処理サポートにより、モダンなAPI開発が可能です。PostgreSQLとの組み合わせで本格的なWebサービスが構築できます。」
+
+この内容を知識ベースに保存してください：
+「API応答時間最適化には、データベースクエリ最適化、キャッシュ戦略、非同期処理の活用が効果的です。特にRedisを使ったセッション管理とクエリ結果キャッシュにより、50%以上の性能向上が期待できます。」
+
+# 3. シンプル構文による知識検索
+{{knowledge:FastAPI}}
+{{knowledge:{{project_name}}}}
+{{knowledge:{{research_topic}}}}
+
+# 4. 経験学習と検索
+この成功例を経験として保存してください：
+「Python API開発において、FastAPI + PostgreSQL + Dockerの構成で2週間で本格的なREST APIを構築。自動テスト導入により品質とスピードを両立し、チーム開発効率が40%向上した。」
+
+{{memory:Python API開発}}
+{{memory:{{project_name}}}}
+{{memory:新しいWeb開発プロジェクト}}
+
+# 5. 条件分岐と統合活用
+{{skill_level}}が中級者の場合は効率重視の開発手法を、初心者の場合は学習重視のアプローチを提案してください
+```
+
+#### 期待される動作結果
+
+**シンプル構文の自動実行**：
+- `{{knowledge:FastAPI}}` → ベクトル類似度検索実行、関連知識の自動表示
+- `{{memory:API開発}}` → 過去の成功経験から類似パターンを発見・提示
+- `{{knowledge:{{project_name}}}}` → 変数値での動的検索（ネスト構文）
+
+**学習サイクルの確立**：
+1. 知識蓄積 → ベクトル化保存
+2. 経験記録 → 成功・失敗パターンの保存  
+3. 類似状況での自動想起 → 意味的検索による関連情報発見
+4. 戦略立案への活用 → 過去の知見を基にした判断支援
+
+### マルチエージェント環境での活用
+
+#### 共有知識・経験プールの構築
+
+**A.5マルチエージェントシステムとの連携**：
+
+```bash
+# エージェント1: 知識蓄積
+uv run python -c "from simple_chroma_rag import add_knowledge_from_text; print(add_knowledge_from_text('新しい最適化手法', 'agent_1'))"
+
+# エージェント2: 知識活用
+uv run python -c "from simple_chroma_rag import search_knowledge_base; print(search_knowledge_base('最適化'))"
+
+# エージェント3: 経験記録
+uv run python -c "from simple_chroma_rag import save_experience; print(save_experience('UI改善タスク', '応答性30%向上', True))"
+
+# エージェント4: 経験活用
+uv run python -c "from simple_chroma_rag import find_similar_experience; print(find_similar_experience('パフォーマンス改善'))"
+```
+
+**エージェント間知識共有の利点**：
+- **知識の集約**: 各エージェントが蓄積した知識の自動共有
+- **経験の継承**: 成功・失敗パターンの組織的学習
+- **専門性の相互活用**: 異なる専門分野の知見を横断活用
+- **品質向上**: 集合知による判断精度向上
+
+### 初期セットアップと運用
+
+#### ChromaDB環境構築
+
+```bash
+# 必要パッケージのインストール
+uv add chromadb
+
+# システム動作確認
+python -c "from simple_chroma_rag import SimpleChromaRAG; rag = SimpleChromaRAG(); print(rag.get_stats())"
+
+# 統合監視開始
+python watch_integrated.py --watch
+```
+
+#### データベース管理
+
+**永続化ファイル**：
+- `./chroma_db/` - Chromaベクトルデータベース
+- `variables.db` - SQLite変数データベース
+
+**バックアップとメンテナンス**：
+```bash
+# データベース統計確認
+python watch_integrated.py --status
+
+# バックアップ（ディレクトリ全体をコピー）
+cp -r ./chroma_db ./chroma_db_backup_$(date +%Y%m%d)
+cp variables.db variables_backup_$(date +%Y%m%d).db
+```
+
+ChromaDB統合RAGシステムにより、自然言語マクロプログラミングは**知識豊富で経験豊かな自律システム**へと進化し、意味的類似性検索による高度な問題解決能力を獲得します。
 
 ## A.15: ゴール指向アーキテクチャと自律的プランニング
 
