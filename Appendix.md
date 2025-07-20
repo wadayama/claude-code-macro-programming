@@ -697,45 +697,126 @@ multi-haikuの設計原則を他ドメインに適用するための指針を提
 
 ### 基本アーキテクチャ
 
-自然言語マクロプログラミングにおいて、variables.jsonを拡張した監査ログシステムにより、全ての重要な処理ステップと意思決定を時系列で記録できる。既存のマクロ構文との完全な統合により、透明性と責任追跡性を確保する。
+自然言語マクロプログラミングにおいて、**SQLiteベースのAuditLoggerクラス**により、全ての変数操作、意思決定、推論プロセスを永続的に記録する包括的な監査システムを構築できる。`audit_logger.py`のAuditLoggerは`VariableDB`を拡張し、変数管理機能に自動監査記録を統合することで、完全な透明性と説明可能性を確保する。
+
+**アーキテクチャ特徴**:
+- **自動変数ログ**: 全ての変数作成・更新・削除が自動的にaudit_logsテーブルに記録される
+- **判断理由記録**: 意思決定の内容と根拠を構造化して永続保存
+- **推論プロセス記録**: LLMの思考過程を文脈・推論・結果として完全追跡
+- **高性能データベース**: SQLiteのWALモードと楽観的ロック機構による並行処理対応
 
 ### 実装パターン
 
-**標準的なログ構造**: variables.jsonにaudit_log配列を追加し、各処理ステップで自動記録
+**SQLiteデータベーススキーマ**: 構造化された監査ログテーブルによる包括的記録
 
-```json
-{
-  "current_data": {"task_status": "processing"},
-  "audit_log": [
-    {
-      "timestamp": "2025-07-01T10:30:00Z",
-      "event_type": "user_input",
-      "content": "市場分析レポートを作成してください",
-      "source": "human"
-    },
-    {
-      "timestamp": "2025-07-01T10:35:00Z", 
-      "event_type": "human_approval",
-      "content": "データ収集範囲の承認: Approved",
-      "source": "human"
-    }
-  ]
-}
+```sql
+CREATE TABLE audit_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    event_type TEXT NOT NULL,              -- variable_create, decision_made, etc.
+    variable_name TEXT,                    -- 対象変数名（該当する場合）
+    old_value TEXT,                        -- 変更前の値
+    new_value TEXT,                        -- 変更後の値/決定内容
+    reasoning TEXT,                        -- 判断理由・推論プロセス
+    source TEXT DEFAULT 'system',         -- macro, llm, human
+    session_id TEXT,                       -- セッション識別子
+    metadata TEXT                          -- 追加情報（JSON形式）
+);
 ```
 
-**マクロからの記録**: 自然言語による直感的なログ記録
+**変数操作の自動ログ記録**: 全ての変数変更が自動的に記録される
 
-```markdown
-「処理開始: {{task_description}}」をaudit_logに記録してください
-「承認待ち: {{approval_request}}」をaudit_logに追加してください
+```bash
+# 変数保存時の自動ログ記録例
+uv run python -c "from audit_logger import save_variable; save_variable('user_name', '田中太郎'); print('{{user_name}}に\"田中太郎\"を保存しました')"
+
+# 自動生成されるログ（variable_createまたはvariable_update）
+# timestamp: 2025-07-01T10:30:00Z
+# event_type: variable_create
+# variable_name: user_name
+# new_value: 田中太郎
+# source: macro
+```
+
+**判断理由記録**: 意思決定プロセスの透明性確保
+
+```bash
+# 判断理由の明示的記録
+uv run python -c "from audit_logger import log_decision; log_decision('スコア85点なので優秀と判定', '80点以上は優秀基準に該当するため'); print('判断理由をログに記録しました')"
+```
+
+**推論プロセス記録**: LLMの思考過程を完全追跡
+
+```bash
+# 推論プロセスの詳細記録
+uv run python -c "from audit_logger import log_reasoning; log_reasoning('学習評価システム', 'スコア85 >= 80の条件を満たすため優秀カテゴリに分類', '優秀判定'); print('推論プロセスをログに記録しました')"
 ```
 
 ### 自動変数変更ロギング
 
-楽観的ロック機構を利用することで、variables.jsonの変更を自動的に監査ログに記録することが可能である。変数の更新操作ごとに変更内容をログに記録し、システムの透明性を高める。詳細な実装については[A.13変数管理の永続化とスケーリング](#a13-変数管理の永続化とスケーリングデータベースの活用)を参照。
+AuditLoggerクラスは`VariableDB`を拡張し、全ての変数操作（作成・更新・削除）を自動的にaudit_logsテーブルに記録する。従来のvariables.json手動記録と異なり、変数操作時に透明に監査証跡が生成され、操作の意図や実行者、タイムスタンプが自動保存される。
+
+**自動記録メカニズム**:
+```python
+# save_variable実行時の自動ログ記録
+old_value = self.get_variable(name)
+event_type = EventType.VARIABLE_UPDATE if old_value else EventType.VARIABLE_CREATE
+super().save_variable(name, value)  # 変数保存
+self.log_event(event_type=event_type, variable_name=name, 
+               old_value=old_value, new_value=value, source="macro")
+```
+
+これにより、マクロ実行者は明示的なログ記録を意識することなく、全ての変数変更が自動的に監査証跡として保存される。
+
+### 自然言語による監査機能拡張
+
+CLAUDE.mdの監査ログ構文により、変数操作以外の判断理由と推論プロセスも自然言語で記録できる：
+
+**判断理由記録構文**:
+```
+「{{score}}が85なので優秀と判断しました。この判断理由をログに記録してください」
+→ log_decision('{{score}}(85)なので優秀と判定', '80点以上は優秀基準に該当するため')
+```
+
+**推論プロセス記録構文**:
+```
+「学習評価における推論プロセスをログに記録してください」
+→ log_reasoning('学習評価システム', 'スコア分析による分類判定', '優秀カテゴリ')
+```
+
+### 監査ログ分析・可視化システム
+
+`audit_viewer.py`による高度なログ分析とカラー表示機能により、蓄積された監査証跡を効率的に分析できる。
+
+**基本機能**:
+```bash
+# 最新10件の監査ログを表示
+python audit_viewer.py --recent 10
+
+# 特定変数の完全履歴を表示
+python audit_viewer.py --variable user_score
+
+# 判断・推論証跡のみを表示
+python audit_viewer.py --decisions
+
+# 統計サマリーを表示
+python audit_viewer.py --summary
+
+# JSON形式での出力
+python audit_viewer.py --format json --recent 5
+```
+
+**視覚化機能**:
+- **カラーコード表示**: イベントタイプ別の色分け（作成=緑、更新=黄、削除=赤、判断=青）
+- **変数履歴追跡**: 特定変数の時系列変更を完全追跡
+- **決定証跡分析**: 判断理由と推論プロセスの連鎖を可視化
+- **統計分析**: 最も活発な変数、セッション分析、時間範囲分析
 
 ### 主要な記録対象
 
+**変数操作**: 全ての変数作成・更新・削除を自動記録（old_value → new_value）
+**意思決定**: 判断内容と根拠理由を`log_decision`で構造化記録
+**推論プロセス**: LLMの思考過程を文脈・推論・結果として`log_reasoning`で記録
 **システム操作**: ファイル操作、外部API呼び出し、Python Tool実行
 **人間介入**: Human-in-the-Loop承認、修正指示、緊急停止  
 **エラー処理**: 例外発生、回復処理、代替手段の選択
@@ -743,15 +824,20 @@ multi-haikuの設計原則を他ドメインに適用するための指針を提
 
 ### 利点
 
-**透明性**: 全処理ステップの完全な可視化と意思決定プロセスの記録
-**学習機能**: 成功・失敗パターンの分析による継続的改善
-**信頼性**: 研究倫理審査や業務監査要件への対応
+**完全な透明性**: 変数操作から意思決定まで全プロセスが自動記録され、`audit_viewer.py`で詳細分析可能
+**高性能・信頼性**: SQLiteのWALモードと楽観的ロック機構により、並行処理環境での安定した監査記録
+**説明可能性**: 判断理由と推論プロセスの構造化記録により、LLMの思考過程を完全に追跡可能
+**継続的改善**: 蓄積された監査証跡の分析による成功・失敗パターンの発見と学習
+**コンプライアンス**: 研究倫理審査、業務監査、規制要件への包括的対応
+**デバッグ支援**: 変数履歴追跡と決定証跡により、問題発生時の原因究明を大幅に効率化
 
 ### 📁 実践サンプル
 
 監査ログシステムの詳細な実践例：
 
-- **基本**: [監査ログシステム](./examples/audit_logging/audit_system.md) - variables.json拡張による監査証跡記録の実践
+- **基本**: [A.6監査ログシステム テストマクロ](./audit/test_macro.md) - 変数操作、条件判定、判断理由記録の包括的検証
+- **分析**: `python audit/audit_viewer.py` - 蓄積された監査ログの可視化と分析
+- **システム**: [AuditLoggerクラス](./audit/audit_logger.py) - SQLiteベース監査システムの詳細実装
 
 ## A.7: LLMベース実行前検査
 
