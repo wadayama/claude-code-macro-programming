@@ -2142,32 +2142,6 @@ python watch_integrated.py --search "Python API"
 3. 類似状況での自動想起 → 意味的検索による関連情報発見
 4. 戦略立案への活用 → 過去の知見を基にした判断支援
 
-### マルチエージェント環境での活用
-
-#### 共有知識・経験プールの構築
-
-**A.5マルチエージェントシステムとの連携**：
-
-```bash
-# エージェント1: 知識蓄積
-uv run python -c "from simple_chroma_rag import add_knowledge_from_text; print(add_knowledge_from_text('新しい最適化手法', 'agent_1'))"
-
-# エージェント2: 知識活用
-uv run python -c "from simple_chroma_rag import search_knowledge_base; print(search_knowledge_base('最適化'))"
-
-# エージェント3: 経験記録
-uv run python -c "from simple_chroma_rag import save_experience; print(save_experience('UI改善タスク', '応答性30%向上', True))"
-
-# エージェント4: 経験活用
-uv run python -c "from simple_chroma_rag import find_similar_experience; print(find_similar_experience('パフォーマンス改善'))"
-```
-
-**エージェント間知識共有の利点**：
-- **知識の集約**: 各エージェントが蓄積した知識の自動共有
-- **経験の継承**: 成功・失敗パターンの組織的学習
-- **専門性の相互活用**: 異なる専門分野の知見を横断活用
-- **品質向上**: 集合知による判断精度向上
-
 ### 初期セットアップと運用
 
 #### ChromaDB環境構築
