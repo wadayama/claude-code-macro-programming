@@ -1037,7 +1037,7 @@ cat agents/code_reviewer.md | claude -p --dangerously-skip-permissions
 
 #### 実行フロー
 
-1. **テーマ設定**: タスク内容をvariables.jsonに保存
+1. **テーマ設定**: タスク内容を変数に設定
 2. **コード生成**: 専門エージェントがPythonコードを作成
 3. **品質評価**: 別の専門エージェントが詳細レビュー実施
 4. **結果統合**: 生成コードとレビューレポートを統合出力
