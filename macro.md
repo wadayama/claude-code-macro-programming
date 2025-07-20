@@ -37,9 +37,9 @@
 
 ### 付録（高度な技術）- [Appendix.md](./Appendix.md)
 - [A.1: システム制御とリソース管理](./Appendix.md#a1-システム制御とリソース管理) - リアルタイムシステム制御と経済合理的リソース管理
-- [A.2: Event-Driven実行](./Appendix.md#a2-event-driven実行) - 非同期処理とリアルタイム応答システム
-- [A.3: 重要なタスクでのリスク軽減戦略](./Appendix.md#a3-重要なタスクでのリスク軽減戦略) - 4層防御戦略による安全な運用手法
-- [A.4: Python Tool Integration（Python ツール統合）](./Appendix.md#a4-python-tool-integrationpython-ツール統合) - variables.json連携によるPythonエコシステム活用
+- [A.2: イベント駆動実行](./Appendix.md#a2-イベント駆動実行) - 非同期処理とリアルタイム応答システム
+- [A.3: 4層の防御戦略](./Appendix.md#a3-4層の防御戦略) - 4層防御戦略による安全な運用手法
+- [A.4: Python ツール統合](./Appendix.md#a4-python-ツール統合) - variables.json連携によるPythonエコシステム活用
 - [A.5: マルチエージェント・システム設計](./Appendix.md#a5-マルチエージェントシステム設計) - 共有黒板モデルによる協調エージェントシステム（俳句生成マルチエージェント実装例含む）
 - [A.6: 監査ログシステム](./Appendix.md#a6-監査ログシステム) - variables.json拡張による透明性と責任追跡性の確保
 - [A.7: LLMベース検証システム（LLM-based Lint）](./Appendix.md#a7-llmベース検証システムllm-based-lint) - LLMによる実行前静的分析によるセキュリティと品質の確保
