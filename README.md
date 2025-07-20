@@ -90,7 +90,9 @@ TODO-listベースの反復処理とFew-shot Pattern Loopによる効率的な�
 
 - **[macro.md](./macro.md)** - メインガイド（10デザインパターン + 付録参照）
 - **[Appendix.md](./Appendix.md)** - 付録（高度な技術要素と手法）
-- **[examples/](./examples/)** - パターン別実例集 
+- **[examples/](./examples/)** - パターン別実例集
+- **[multi-haiku/](./multi-haiku/)** - マルチエージェント俳句生成システム（SQLiteベース実装例）
+- **[SQLite/](./SQLite/)** - SQLiteベース変数管理システムの実装コードとツール
 - **[haiku_direct.md](./haiku_direct.md)** - 実例（俳句生成システム）
 - **[CLAUDE.md](./CLAUDE.md)** - マクロ定義ファイル
 - **[debugger.md](./debugger.md)** - デバッグモード仕様書
