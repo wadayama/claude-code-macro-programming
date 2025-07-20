@@ -1123,214 +1123,265 @@ cat agents/code_reviewer.md | claude -p --dangerously-skip-permissions
 
 ## A.10: 型安全性とスキーマ管理
 
-### 背景と重要性
+### 基本アーキテクチャ
 
-自然言語マクロプログラミングは基本的に文字列ベースの変数管理を前提として設計されているが、本ガイドで提案するPython Tool Integrationのような高度な機能や、数値計算、大規模データ処理、外部API連携等の用途を考慮した場合、**型安全性とデータ整合性**の検討が重要となる。これらの領域では型の不整合が実行時エラーや予期しない結果を引き起こす可能性がある。
+自然言語マクロプログラミングにおいて、**SQLiteベース統合型検証システム**により、変数保存時の型安全性とデータ整合性を確保できる。`schema/variable_db.py`の統合保存関数により、従来の文字列ベース保存と型付き保存を同一インターフェースで提供し、段階的な型安全性導入を実現する。
 
-**変数管理方式による型安全性の違い**：
-- **variables.json**: 基本的に文字列管理で、本セクションのJSONスキーマ検証により型安全性を確保
-- **SQLiteベース（A.17参照）**: データベースの型システム（INTEGER、REAL、TEXT等）により、データベースレベルでの型制約と整合性が自動的に保証される
+**システム構成**:
+- **統合保存関数**: `save_variable(name, value, type_name=None)` - 型指定の有無により動作切り替え
+- **外部スキーマ定義**: `test_schema.json` - JSON Schema形式での型制約定義
+- **型検証エンジン**: 基本型・制約付き型・列挙型に対応した検証ロジック
+- **リアルタイム監視**: `watch_variables.py` - 型情報付き変数状態の視覚化
 
-**このセクションの目的**：
-- 段階的な型安全性強化手法の提案
-- スキーマベースの体系的データ管理方式の説明
-- 基本利用から高度利用までの移行戦略の整理
-- 実用的な型管理手法の体系化
+**型安全性レベル**:
+- **基本保存**: `{{variable}}に値を保存` → 型チェックなし（後方互換性）
+- **型付き保存**: `値をTYPE型として{{variable}}に保存` → 完全な型検証
+- **一括検証**: `全ての変数の型チェックを実行` → 蓄積データの整合性確認
 
-### 基本的な型指定機能
+### 実装パターン
 
-#### 型情報の直接記述
+#### CLAUDE.md自然言語構文による型付き保存
 
-**将来的な拡張オプション**として、variables.json内での型情報直接記述による型安全性確保が可能。基本的なマクロ動作には不要だが、複雑なPython連携や高い信頼性が求められる場面での安全性提供に寄与する。
+CLAUDE.mdで定義された自然言語構文により、直感的な型付き変数保存が可能：
 
-```json
-{
-  "user_name": "田中太郎",           // 基本形式（推奨）
-  "user_age": {                     // 型指定（オプション）
-    "value": 30,
-    "type": "integer"
-  },
-  "analysis_results": {             // 配列型の例
-    "value": [1.2, 3.4, 5.6],
-    "type": "array",
-    "element_type": "number"
-  },
-  "config_flag": {                  // 真偽値型の例
-    "value": true,
-    "type": "boolean"
-  }
-}
+```bash
+# 基本型の型付き保存例
+uv run python -c "from variable_db import save_variable; save_variable('user_age', '25', 'integer'); print('{{user_age}}に\"25\"をinteger型として保存しました')"
+
+# 制約付き型の型付き保存例  
+uv run python -c "from variable_db import save_variable; save_variable('current_age', '30', 'age'); print('{{current_age}}に\"30\"をage型として保存しました')"
+
+# 列挙型の型付き保存例
+uv run python -c "from variable_db import save_variable; save_variable('task_status', 'completed', 'status'); print('{{task_status}}に\"completed\"をstatus型として保存しました')"
 ```
 
-#### 自然言語による型指定
-
-型安全性は自然言語マクロの基本思想に沿って、直感的な指定が可能：
-
+**自然言語マクロでの使用例**:
 ```markdown
-## 型安全な変数設定の例
+# 型付き変数保存
+25をinteger型として{{user_age}}に保存してください
+3.14をnumber型として{{pi_value}}に保存してください
+trueをboolean型として{{is_enabled}}に保存してください
 
-{{user_age}}の型をintegerに設定してください
-{{success_rate}}の型をnumberに設定してください
-{{feature_enabled}}の型をbooleanに設定してください
-
-## 型制約付きの値保存
-30を整数型として{{user_age}}に保存してください
-"有効"をbooleanのtrueとして{{status}}に保存してください
+# 制約付き型保存
+30をage型として{{current_age}}に保存してください  
+75をpercentage型として{{completion}}に保存してください
+completedをstatus型として{{task_status}}に保存してください
 ```
 
-#### 適用対象と選択的導入
+#### 型検証と自動エラーハンドリング
 
-数値計算処理、大規模データ処理、外部API連携等、**型の不整合が深刻な問題となりうる特定の用途**において選択的に導入。日常的なマクロ使用では基本形式で十分。必要に応じて段階的な型安全性の導入が可能である。
+型制約違反時は`SchemaValidationError`が自動発生し、具体的なエラーメッセージで問題を明示：
 
-### スキーマファイルベースの体系的管理
+```python
+# 範囲制約違反の例
+try:
+    save_variable('invalid_age', '-5', 'age')
+except SchemaValidationError as e:
+    print(f"エラー: {e}")  # "Value -5 is below minimum 0 for type age"
 
-#### 事前定義スキーマファイル
+# 列挙制約違反の例  
+try:
+    save_variable('invalid_status', 'unknown', 'status')
+except SchemaValidationError as e:
+    print(f"エラー: {e}")  # "Value 'unknown' not in allowed values ['pending', 'completed', 'failed']"
+```
 
-**より高度な型管理**が必要な場合、以下のようなスキーマ事前定義が有効：
+### スキーマ定義システム
 
-**variables.json向け**: JSONスキーマファイルによる構造定義
-**SQLite向け**: DDL（Data Definition Language）によるテーブル定義とスキーマ設計（より強力な型制約、外部キー、CHECK制約等が利用可能）
+#### test_schema.json外部ファイル管理
+
+schema/フォルダの`test_schema.json`により、JSON Schema形式での型定義を外部管理できる：
 
 ```json
-// variables.schema.json の例
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "analysis_config": {
-      "type": "object",
-      "properties": {
-        "precision": {"type": "number", "minimum": 0.1, "maximum": 1.0},
-        "iterations": {"type": "integer", "minimum": 1},
-        "output_format": {"type": "string", "enum": ["json", "csv", "xml"]}
-      },
-      "required": ["precision", "iterations"]
+  "title": "Variable Type Schema Definitions",
+  "description": "Schema definitions for natural language macro programming variable validation",
+  "version": "1.0",
+  "schemas": {
+    "integer": {
+      "type": "integer",
+      "description": "Basic integer type"
     },
-    "user_profile": {
-      "type": "object",
-      "properties": {
-        "name": {"type": "string", "minLength": 1},
-        "age": {"type": "integer", "minimum": 0, "maximum": 150},
-        "preferences": {
-          "type": "array",
-          "items": {"type": "string"},
-          "uniqueItems": true
-        }
-      },
-      "required": ["name", "age"]
+    "number": {
+      "type": "number", 
+      "description": "Basic number type (integer or float)"
     },
-    "processing_results": {
-      "type": "object",
-      "properties": {
-        "status": {"type": "string", "enum": ["pending", "processing", "completed", "failed"]},
-        "timestamp": {"type": "string", "format": "date-time"},
-        "data": {"type": "array", "items": {"type": "number"}}
-      }
+    "string": {
+      "type": "string",
+      "description": "Basic string type"
+    },
+    "boolean": {
+      "type": "boolean",
+      "description": "Basic boolean type"
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 150,
+      "description": "Age in years (0-150)"
+    },
+    "percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Percentage value (0-100)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "completed", "failed"],
+      "description": "Task status enumeration"
     }
   }
 }
 ```
 
-#### スキーマ検証の統合
+#### スキーマの自動読み込みとフォールバック機能
 
-Python Tool Integrationにおけるスキーマ検証の実装例：
+`variable_db.py`は外部スキーマファイルを自動読み込みし、失敗時は内蔵定義にフォールバック：
 
 ```python
-import json
-import jsonschema
-from pathlib import Path
-
-def validate_and_load_variables():
-    """スキーマ検証付きでvariables.jsonを読み込み"""
-    try:
-        # スキーマファイルの読み込み
-        with open("variables.schema.json", 'r', encoding='utf-8') as f:
-            schema = json.load(f)
-        
-        # variables.jsonの読み込み
-        with open("variables.json", 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        # スキーマ検証
-        jsonschema.validate(instance=data, schema=schema)
-        
-        print("スキーマ検証成功")
-        return data
-        
-    except jsonschema.ValidationError as e:
-        print(f"スキーマ検証エラー: {e.message}")
-        return None
-    except Exception as e:
-        print(f"ファイル読み込みエラー: {e}")
-        return None
+def _init_schemas(self) -> None:
+    """Initialize schema definitions from external JSON file."""
+    schema_file = Path("test_schema.json")
+    
+    if schema_file.exists():
+        try:
+            with open(schema_file, 'r', encoding='utf-8') as f:
+                schema_data = json.load(f)
+            # Convert JSON Schema format to internal format
+            self.schemas = {}
+            for name, schema_def in schema_data["schemas"].items():
+                converted_schema = self._convert_json_schema(schema_def)
+                self.schemas[name] = converted_schema
+        except Exception as e:
+            print(f"Warning: Could not load schema file: {e}")
+            self._init_fallback_schemas()  # 内蔵定義を使用
 ```
 
-#### 使用方法と実践例
+### 型チェック・監視ツール
 
-**基本的な使用方法**：
-```python
-# スキーマ検証付きでデータを読み込み
-data = validate_and_load_variables()
-if data is not None:
-    user_name = data.get("user_name", "anonymous")
-    precision = data.get("analysis_precision", 0.8)
-    print(f"ユーザー: {user_name}, 精度: {precision}")
-else:
-    print("スキーマ検証に失敗しました")
+#### 一括型検証機能
+
+CLAUDE.mdの自然言語構文による全変数の型チェック実行：
+
+```bash
+# 全変数の型チェック実行
+uv run python -c "from variable_db import validate_all; results = validate_all(); print('型チェック結果:'); [print(f'{name}: {\"有効\" if result is True else result}') for name, result in results.items()]"
 ```
 
-**自然言語マクロでの統合**：
+**実行例**:
+```
+型チェック結果:
+user_age: 有効
+current_age: 有効  
+task_status: 有効
+invalid_data: Type conversion failed for integer: invalid literal for int()
+```
+
+#### watch_variables.py型対応監視ツール
+
+`schema/watch_variables.py`により、型情報付きリアルタイム変数監視が可能：
+
+```bash
+# 型情報付き変数状態表示
+python schema/watch_variables.py --once
+
+# 継続監視（型変更を視覚化）
+python schema/watch_variables.py --continuous
+
+# 型検証状況の確認
+python schema/watch_variables.py --validate
+
+# 利用可能なスキーマ型の表示
+python schema/watch_variables.py --schemas
+```
+
+**表示機能**:
+- **カラーコード表示**: 型別の色分け（typed=マゼンタ、untyped=黄色）
+- **検証ステータス**: ✓（有効）、✗（無効）、-（型なし）の視覚的表示
+- **型統計**: 型分布、最近更新された変数、データベース統計
+- **変更追跡**: 変数値・型変更のリアルタイム表示
+
+### マルチエージェント環境での型安全性
+
+SQLiteベース型検証システムにより、マルチエージェント環境での安全なデータ交換を実現：
+
+**並行アクセス対応**:
+- **WALモード**: SQLiteのWrite-Ahead Loggingによる並行読み取り・書き込み
+- **楽観的ロック**: データベースロック競合の自動リトライ機構
+- **型情報共有**: エージェント間での一貫した型制約の適用
+
+**エージェント識別と型安全性**:
+```bash
+# エージェントAによる型付きデータ作成
+uv run python -c "from variable_db import save_variable; save_variable('shared_config', '95', 'percentage')"
+
+# エージェントBによる型安全な読み取り
+uv run python -c "from variable_db import get_variable_typed; value, type_name = get_variable_typed('shared_config'); print(f'値: {value}, 型: {type_name}')"
+```
+
+### 実践サンプルとテスト
+
+#### test_sample.md包括的検証テスト
+
+`schema/test_sample.md`は統合型検証システムの動作確認用包括的テストを提供：
+
+**基本型検証例**:
 ```markdown
-# プロジェクト設定の検証と読み込み
-{{project_settings}}の値をスキーマ検証付きで取得し、設定が正しい場合のみ処理を継続してください
+# 整数型
+25をinteger型として{{user_age}}に保存してください
+{{user_age}}を取得してください
 
-# 数値データの型安全な処理
-{{calculation_params}}をスキーマ検証で確認し、すべて数値型の場合のみ計算を実行してください
+# 数値型  
+3.14をnumber型として{{pi_value}}に保存してください
+{{pi_value}}を取得してください
+
+# 真偽値型
+trueをboolean型として{{is_enabled}}に保存してください
+{{is_enabled}}を取得してください
 ```
 
-#### エージェント間通信での活用
-
-マルチエージェント環境において、スキーマ検証をエージェント間通信プロトコルとして活用。各エージェントは共通のスキーマに従ってvariables.jsonにデータを書き込み、他のエージェントが安全にデータを読み取る仕組みを提供する。通信エラーの早期発見、不正データの混入防止、システム全体の堅牢性向上を実現する（詳細は[A.5: マルチエージェント・システム設計](#a5-マルチエージェントシステム設計)を参照）。
-
-### 段階的導入戦略
-
-#### 3段階の導入レベル
-
-**基本利用**（推奨開始レベル）：
-- スキーマファイルなし、シンプルな変数管理
-- 文字列ベースの基本的な値保存・参照
-- 型エラーは実行時に自然発見・修正
-
-**中級利用**（特定用途での部分導入）：
-- 重要データのみスキーマ定義
-- 部分的型検証（数値計算部分、API連携部分等）
-- 基本部分は従来通り、重要部分のみ型安全性確保
-
-**高度利用**（ミッションクリティカル用途）：
-- 完全なスキーマベース型管理
-- 厳密な検証とエラーハンドリング
-- プロジェクト全体での一貫した型管理
-
-#### 移行戦略の実践例
-
+**制約付き型検証例**:
 ```markdown
-## 段階的移行の実践例
+# 年齢制約（0-150）
+30をage型として{{current_age}}に保存してください
 
-### ステップ1: 基本利用から中級利用への移行
-重要な数値設定のみスキーマ定義を導入：
+# パーセンテージ制約（0-100）
+75をpercentage型として{{completion}}に保存してください
 
-{{analysis_precision}}を0.95（number型、0.1-1.0範囲）として保存
-{{iteration_count}}を100（integer型、最小1）として保存
-
-### ステップ2: 中級利用から高度利用への移行
-variables.schema.jsonの作成と全データの体系的管理：
-
-スキーマファイルに基づいてvariables.jsonの検証を実行
-型制約違反がある場合はエラー報告と修正提案
+# ステータス列挙制約
+completedをstatus型として{{task_status}}に保存してください
 ```
 
+**エラーケース検証**:
+```markdown
+# 範囲制約違反
+-5をage型として{{invalid_age}}に保存してください
+→ SchemaValidationError: Value -5 is below minimum 0 for type age
 
-型安全性とスキーマ管理は、自然言語マクロプログラミングの基本的な使いやすさを維持しつつ、より高い信頼性と保守性を提供する手法である。
+# 列挙制約違反
+unknownをstatus型として{{invalid_status}}に保存してください
+→ SchemaValidationError: Value 'unknown' not in allowed values ['pending', 'completed', 'failed']
+```
+
+### 利点
+
+**完全な後方互換性**: 既存の`{{variable}}に保存`構文をそのまま使用可能（型チェックなし）
+**段階的導入**: プロジェクトの重要度に応じて選択的に型安全性を導入
+**リアルタイム監視**: `watch_variables.py`による型情報付き開発・デバッグ支援
+**マルチエージェント対応**: SQLite並行アクセス機能による安全なエージェント間データ交換
+**外部スキーマ管理**: `test_schema.json`による型定義の保守性・拡張性確保
+**日本語完全対応**: Unicode文字列と日本語の真偽値表現（はい/いいえ）をサポート
+
+### 📁 実践サンプル
+
+型安全性とスキーマ管理の詳細な実践例：
+
+- **基本**: [統合型検証テスト](./schema/test_sample.md) - 基本型・制約付き型・エラーケースの包括的検証
+- **スキーマ**: [型定義ファイル](./schema/test_schema.json) - JSON Schema形式での外部型定義
+- **監視**: `python schema/watch_variables.py` - 型情報付きリアルタイム変数監視
+- **システム**: [統合型検証システム](./schema/variable_db.py) - SQLiteベース型安全変数管理の詳細実装
 
 ## A.11: 並行アクセス制御と楽観的ロック
 
