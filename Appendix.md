@@ -2164,159 +2164,126 @@ SQLiteデータベース（A.17参照）は、Pythonオーケストレータと�
 - 結果の構造化による後処理の効率化
 
 **処理速度の向上**:
-- イベントドリブンによる即座の反応
 - 並行処理とコールバック機構の活用
-- 軽量なvariables.json統合による高速データ交換
+- 軽量なSQLite統合による高速データ交換
+- イベント処理については[A.2: Event-Driven実行](#a2-event-driven実行)を参照
 
-### イベントドリブンアーキテクチャ
+### 基本統合パターン
 
-#### ファイルシステム監視統合
+#### SQLiteベースの協調処理
 
-**watchdogとの連携**（A.2の拡張応用）:
+**Python側: 高速データ処理**:
 ```python
-# ファイル監視 + 自然言語マクロ協調
-class DocumentProcessor:
-    def on_created(self, event):
-        # Python: 高速前処理
-        file_info = self.extract_metadata(event.src_path)
-        # 自然言語マクロ: 内容分析
-        analysis = self.call_nlmacro("analyze_document.md", file_info)
-        # Python: 結果に基づく自動処理
-        self.route_document(analysis)
-```
+from variable_db import get_variable, save_variable
+import json
 
-#### データベースウォッチ統合
-
-**MongoDB Change Streamsの活用**（A.13との連携）:
-```python
-# MongoDB + 自然言語マクロ協調
-def watch_orders_collection():
-    with client.watch([{"$match": {"operationType": "insert"}}]) as stream:
-        for change in stream:
-            # Python: 注文データの構造化
-            order_data = extract_order_details(change.fullDocument)
-            # 自然言語マクロ: 注文内容の評価判断
-            evaluation = call_nlmacro("evaluate_order.md", order_data)
-            # Python: 評価結果に基づく自動ルーティング
-            route_to_fulfillment(evaluation)
-```
-
-**その他のデータベース**: PostgreSQL LISTEN/NOTIFY、Redis Pub/Sub等も同様のパターンで統合可能。
-
-#### 時間ベーストリガー
-
-**cronスケジューラ統合**:
-```python
-# 定期実行 + 自然言語マクロ
-def daily_report_generation():
-    # Python: データ収集と前処理
-    raw_data = collect_daily_metrics()
-    # 自然言語マクロ: レポート生成と洞察抽出
-    report = call_nlmacro("generate_daily_report.md", raw_data)
-    # Python: 配信とアーカイブ
-    distribute_report(report)
-```
-
-### オーケストレーションパターン
-
-#### 基本統合パターン
-
-**variables.json中心のデータ交換**:
-```python
-def call_nlmacro(macro_file, input_data):
-    # Python → 自然言語マクロ
-    update_variables_json(input_data)
+def process_sales_data():
+    # Python: 高速計算処理
+    sales_data = calculate_daily_sales()
+    summary = {
+        "total": sum(sales_data),
+        "average": sum(sales_data) / len(sales_data),
+        "target": 10000
+    }
     
-    # 自然言語マクロ実行
-    result = subprocess.run(
-        ["claude", "-f", macro_file], 
-        capture_output=True, text=True
-    )
+    # SQLiteデータベースにデータを保存
+    save_variable('sales_summary', json.dumps(summary))
     
-    # 自然言語マクロ → Python
-    return load_variables_json()
+    # 自然言語マクロで判断・生成処理を実行
+    call_macro('analyze_sales.md')
+    
+    # 結果を取得してPython側で後処理
+    analysis = get_variable('sales_analysis')
+    send_report_email(analysis)
+    
+def call_macro(macro_file):
+    subprocess.run(["claude", "-f", macro_file])
 ```
 
-#### 非同期処理とコールバック
+**マクロ側: 判断・メッセージ生成**:
+```markdown
+# analyze_sales.md
+{{sales_summary}}のデータを分析して以下を判断してください：
 
-**イベントドリブン処理フロー**:
+売上が目標を上回った場合：
+- 祝福メッセージを{{celebration_message}}に生成してください
+
+売上が目標を下回った場合：
+- 改善提案を{{improvement_suggestions}}に生成してください
+
+総合的な分析レポートを{{sales_analysis}}に保存してください。
+```
+
+### 実用例：顧客サポート自動化
+
+#### Python + マクロ協調による効率化
+
+**処理フロー**:
+1. **Python**: 顧客データの収集・整理（高速処理）
+2. **マクロ**: 状況判断・回答生成（柔軟な判断）
+3. **Python**: 結果配信・ログ記録（自動化処理）
+
 ```python
-class EventOrchestrator:
-    def __init__(self):
-        self.event_queue = Queue()
-        self.nlmacro_pool = ThreadPoolExecutor(max_workers=3)
+def handle_customer_inquiry(customer_id, inquiry_text):
+    # Python: 顧客履歴の高速検索
+    history = get_customer_history(customer_id)
+    context = {
+        "customer_id": customer_id,
+        "inquiry": inquiry_text,
+        "purchase_history": history,
+        "tier": get_customer_tier(customer_id)
+    }
     
-    def process_event_async(self, event_data):
-        # 非同期で自然言語マクロを実行
-        future = self.nlmacro_pool.submit(
-            self.call_nlmacro, "process_event.md", event_data
-        )
-        future.add_done_callback(self.handle_result)
+    # SQLiteにデータを保存
+    save_variable('customer_context', json.dumps(context))
+    
+    # マクロで回答生成
+    call_macro('generate_response.md')
+    
+    # Python: 結果処理
+    response = get_variable('customer_response')
+    send_response(customer_id, response)
+    log_interaction(customer_id, inquiry_text, response)
 ```
 
-### 既存技術との統合価値
+**対応するマクロ**:
+```markdown
+# generate_response.md
+{{customer_context}}の情報を基に、適切な顧客対応を行ってください：
 
-#### システム統合効果
+顧客ティアがPremiumの場合：
+- 特別対応メッセージを{{premium_response}}に生成
 
-**A.2（Event-Driven実行）との発展的関係**:
-- A.2の監視技術を基盤とした継続的オーケストレーション
-- 単発イベント処理から複雑なワークフロー管理への拡張
+一般的な問い合わせの場合：
+- 丁寧で分かりやすい回答を{{standard_response}}に生成
+
+最終的な顧客回答を{{customer_response}}に保存してください。
+```
+
+### 既存技術との関係
+
+**A.2（Event-Driven実行）との関係**:
+- イベント監視とトリガー機能はA.2を参照
+- A.16では協調処理に焦点
 
 **A.4（Python Tool Integration）との関係**:
-- A.4の統合パターンを活用した常駐型システム
-- 単発ツール実行から継続的協調処理への進化
+- A.4の統合パターンを常駐型システムに拡張
+- 単発ツール実行から継続的協調処理へ発展
 
-**A.13（データベース活用）との連携**:
-- データベースのリアルタイム監視機能の活用
-- 永続化された状態変更の即座検知と自動対応
-
-### 実用例：注文処理システム
-
-```markdown
-# evaluate_order.md
-「{{order_data}}の注文内容を分析し、以下を判定してください：
-
-1. 優先度レベル（high/medium/low）を{{priority}}に設定
-2. 特別対応が必要な場合は{{special_handling}}をtrueに設定
-3. 推定処理時間を{{estimated_time}}に保存
-4. 顧客への通知メッセージを{{customer_message}}に生成
-
-特殊な要求や緊急性の指標を考慮して判断してください。」
-```
+**A.17（SQLite変数管理）との関係**:
+- SQLiteベースの効率的なデータ交換
+- 並行アクセス制御による安全な協調動作
 
 ### Python実装品質基準
 
-オーケストレーション層の信頼性確保のため、Python実装における品質基準の遵守を強く推奨する。
-
-#### 堅牢性の追求
-
 **開発ガイドライン**: [python_dev.md](./python_dev.md)に従った実装により、以下の重要な特性を確保する：
 
-- **型安全性**: 型ヒントによるvariables.json操作の安全性向上
+- **型安全性**: 型ヒントによるSQLite変数操作の安全性向上
 - **エラーハンドリング**: 長時間稼働システムでの堅牢な例外処理
-- **テスト戦略**: イベント処理・非同期処理の包括的テスト
+- **テスト戦略**: 協調処理の包括的テスト
 - **再現性**: 本番環境での一貫した動作保証
 
-#### AI協働による実装
-
-LLMによるオーケストレーションコード生成時の推奨アプローチ：
-
-```markdown
-「MongoDB Change Streamsとの統合オーケストレータを実装してください。
-python_dev.mdの品質基準に従い、以下を含めてください：
-- 型ヒント付きのクラス設計
-- 例外処理とログ出力
-- テストコードとモックの活用
-- uv環境での動作確認」
-```
-
-これにより、企業レベルでの運用に耐える品質のPythonオーケストレーションシステムを構築できる。
-
-### まとめ
-
-Pythonオーケストレーション型ハイブリッドアプローチにより、外部フレームワークに依存することなく、高速で効率的なエージェントシステムの構築が可能になる。既存のA.2、A.4、A.13技術の自然な発展として位置づけられ、実用的な業務自動化システムの基盤を提供する。
-
-このアプローチは、特にトークン使用量とレスポンス速度が重要な企業環境において、コスト効率性と柔軟性を両立した実装手法として有効である。
+これにより、Pythonとマクロが協調する信頼性の高いシステムを構築できる。
 
 ## A.17: SQLiteベース変数管理の実装例
 
