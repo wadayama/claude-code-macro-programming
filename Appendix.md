@@ -502,6 +502,130 @@ def calculate_stats():
 - **openpyxl/xlsxwriter**: Excel自動生成、レポート作成
 - **PIL/OpenCV**: 画像処理、画像解析
 
+### 実践例：データ可視化統合システム
+
+**完全実装による統合パターンの実証**
+
+`integration/`フォルダに配置された実用的なシステムにより、自然言語マクロプログラミングとPythonツール間でのSQLiteベース変数管理による完全な統合を実証する。
+
+#### システム構成
+
+**ファイル構成**:
+```
+integration/
+├── CLAUDE.md               # SQLiteベース自然言語マクロ構文定義
+├── data_visualizer.py      # matplotlib データ可視化ツール
+├── random_generator.py     # 乱数生成ツール
+├── variable_db.py          # SQLite変数管理システム
+├── visualization_demo.md   # 統合デモンストレーション
+└── watch_variables.py      # リアルタイム変数監視ツール
+```
+
+#### 実装されたPythonツール
+
+**1. 乱数生成ツール (random_generator.py)**:
+```python
+def main():
+    # SQLite変数から設定を取得
+    count = int(get_variable("random_count") or "10")
+    min_val = float(get_variable("random_min") or "1.0")
+    max_val = float(get_variable("random_max") or "10.0")
+    
+    # 乱数生成
+    numbers = [round(random.uniform(min_val, max_val), 1) for _ in range(count)]
+    data_str = ",".join(map(str, numbers))
+    
+    # 結果をSQLiteに保存
+    save_variable("data_values", data_str)
+    print(f"Generated {count} random numbers: {data_str}")
+```
+
+**2. データ可視化ツール (data_visualizer.py)**:
+```python
+def main():
+    # SQLite変数からデータと設定を取得
+    data_str = get_variable("data_values")
+    title = get_variable("chart_title") or "Data Visualization"
+    x_label = get_variable("x_label") or "Index"
+    y_label = get_variable("y_label") or "Value"
+    output_file = get_variable("output_filename") or "chart.png"
+    
+    # データ解析と可視化
+    data = [float(x.strip()) for x in data_str.split(",")]
+    plt.figure(figsize=(10, 6))
+    plt.plot(data, marker='o')
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.grid(True)
+    plt.savefig(output_file)
+    
+    # 結果をSQLiteに保存
+    save_variable("output_file", output_file)
+    print(f"Chart saved as {output_file}")
+```
+
+#### 自然言語マクロでの実行例
+
+**完全実行可能なワークフロー** (`visualization_demo.md`):
+```markdown
+# データ可視化デモ - 自然言語マクロプログラミング
+
+## ステップ1: 乱数生成パラメータ設定
+{{random_count}}に"12"を保存してください
+{{random_min}}に"2.5"を保存してください
+{{random_max}}に"15.0"を保存してください
+
+## ステップ2: 乱数データ生成
+random_generator.pyを実行してください
+
+## ステップ3: 可視化設定
+{{chart_title}}に"Custom Random Data Analysis"を保存してください
+{{x_label}}に"Sample Number"を保存してください
+{{y_label}}に"Measured Score"を保存してください
+{{output_filename}}に"custom_analysis.png"を保存してください
+
+## ステップ4: データ可視化実行
+data_visualizer.pyを実行してください
+
+## ステップ5: 結果確認
+{{output_file}}を取得してください
+```
+
+#### 統合パターンの特徴
+
+**1. 疎結合アーキテクチャ**:
+- 自然言語マクロとPythonツールが完全に独立
+- SQLiteデータベースによる非同期データ交換
+- 各コンポーネントの個別テスト・デバッグが可能
+
+**2. 設定駆動処理**:
+- Pythonツールの動作を変数で完全制御
+- 同一ツールでの多様な処理パターン実現
+- 設定変更による柔軟な応用
+
+**3. リアルタイム監視**:
+```bash
+# 別ターミナルでの変数状態監視
+uv run python watch_variables.py --continuous
+```
+
+**4. 実行デモンストレーション**:
+```bash
+# integrationフォルダで実行
+cd integration
+cat visualization_demo.md | claude -p --dangerously-skip-permissions
+```
+
+#### 拡張可能性
+
+**他のPythonライブラリへの適用テンプレート**:
+- **NumPy/SciPy**: 科学技術計算処理
+- **pandas**: データフレーム操作
+- **scikit-learn**: 機械学習パイプライン
+- **requests**: Web API連携
+
+本実装例は、理論的な統合パターンを完全実行可能なシステムとして実証し、Pythonエコシステム全体への拡張の基盤を提供する。
 
 ### Python品質ガイドライン
 
