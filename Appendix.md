@@ -2200,51 +2200,99 @@ def call_macro(macro_file):
 総合的な分析レポートを{{sales_analysis}}に保存してください。
 ```
 
-### 実用例：顧客サポート自動化
+### 実践例：俳句生成マルチエージェントシステム
 
-#### Python + マクロ協調による効率化
+本セクションの理論を実際のコードで実証する完全な実装例。`hybrid/`フォルダに配置された実用的なマルチエージェントシステムの詳細解説。
 
-**処理フロー**:
-1. **Python**: 顧客データの収集・整理（高速処理）
-2. **マクロ**: 状況判断・回答生成（柔軟な判断）
-3. **Python**: 結果配信・ログ記録（自動化処理）
+#### システム構成
 
+**haiku_orchestrator.py** - Pythonオーケストレータ:
 ```python
-def handle_customer_inquiry(customer_id, inquiry_text):
-    # Python: 顧客履歴の高速検索
-    history = get_customer_history(customer_id)
-    context = {
-        "customer_id": customer_id,
-        "inquiry": inquiry_text,
-        "purchase_history": history,
-        "tier": get_customer_tier(customer_id)
-    }
+#!/usr/bin/env python3
+"""
+俳句ジェネレータ Pythonオーケストレータ
+A.15 Pythonオーケストレーション型ハイブリッドアプローチの実践例
+"""
+
+import subprocess
+import concurrent.futures
+from variable_db import save_variable, VariableDB
+
+def run_macro(macro_file):
+    """マクロファイルを実行"""
+    with open(macro_file, 'r', encoding='utf-8') as f:
+        subprocess.run(["claude", "-p", "--dangerously-skip-permissions"], stdin=f)
+
+def create_agent_macro(agent_id):
+    """エージェント専用マクロを動的生成"""
+    with open('agent_template.md', 'r', encoding='utf-8') as f:
+        template = f.read()
     
-    # SQLiteにデータを保存
-    save_variable('customer_context', json.dumps(context))
+    content = template.replace('{{AGENT_ID}}', str(agent_id))
+    filename = f'agents/agent_{agent_id}.md'
     
-    # マクロで回答生成
-    call_macro('generate_response.md')
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(content)
     
-    # Python: 結果処理
-    response = get_variable('customer_response')
-    send_response(customer_id, response)
-    log_interaction(customer_id, inquiry_text, response)
+    return filename
+
+def main():
+    print("=== 俳句生成マルチエージェントシステム開始 ===")
+    
+    # 変数とファイルクリア
+    count = VariableDB().clear_all()
+    print(f"🔄 {count}個の変数をクリア")
+    
+    # 設定とテーマ生成
+    agent_count = 3
+    save_variable('agent_count', str(agent_count))
+    run_macro('generate_themes.md')
+    
+    # 並列俳句生成（核心部分）
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        list(executor.map(run_agent, range(1, agent_count + 1)))
+    
+    # 評価と選択
+    run_macro('evaluate_haiku.md')
 ```
 
-**対応するマクロ**:
+#### 動的マクロ生成メカニズム
+
+**agent_template.md** - エージェントテンプレート:
 ```markdown
-# generate_response.md
-{{customer_context}}の情報を基に、適切な顧客対応を行ってください：
+# 🤖 俳句生成エージェント{{AGENT_ID}}
 
-顧客ティアがPremiumの場合：
-- 特別対応メッセージを{{premium_response}}に生成
+「=== 俳句生成エージェント{{AGENT_ID}}開始 ===」と表示してください。
 
-一般的な問い合わせの場合：
-- 丁寧で分かりやすい回答を{{standard_response}}に生成
+「担当テーマ: {{agent_{{AGENT_ID}}_theme}}」と表示してください。
 
-最終的な顧客回答を{{customer_response}}に保存してください。
+{{agent_{{AGENT_ID}}_theme}}に基づいて俳句を作成してください。
+
+要件：
+- 5-7-5の音律構造に従う
+- テーマの奇妙さと独特さを表現
+- 詩的で印象的な言葉を使用
+
+作成した俳句を{{agent_{{AGENT_ID}}_haiku}}に保存してください。
 ```
+
+#### マクロ連携フロー
+
+1. **generate_themes.md** - テーマ生成・配布
+2. **動的生成されたagent_N.md** - 並列俳句生成
+3. **evaluate_haiku.md** - 俳句評価・選択
+
+#### パフォーマンス特性
+
+**並列処理効果**:
+- 3エージェント同時実行で約3倍高速化
+- SQLite変数共有による安全な並行アクセス
+- エージェント数の動的スケーリング対応
+
+**トークン効率化**:
+- Python制御部分のトークン使用量: 0
+- マクロ実行部分のみでLLMリソース使用
+- 定型処理の完全なPython移行
 
 ### 既存技術との関係
 
