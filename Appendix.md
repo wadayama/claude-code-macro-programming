@@ -1886,6 +1886,18 @@ def listen_for_changes():
 
 ### 基本アーキテクチャ
 
+#### システム構成
+
+**ファイル構成**:
+```
+Chroma/
+├── CLAUDE.md               # ChromaDB統合自然言語マクロ構文定義
+├── simple_chroma_rag.py    # ChromaDB RAGシステム実装
+├── test_macro.md          # RAG機能検証テストマクロ
+├── variable_db.py         # SQLite変数管理システム
+└── watch_integrated.py    # ChromaDB&SQLite統合監視ツール
+```
+
 #### ChromaDB統合実装システム（`Chroma/simple_chroma_rag.py`）
 
 **二重コレクション設計**により知識と経験を分離管理：
@@ -2298,6 +2310,21 @@ SQLiteデータベース（A.16参照）は、Pythonオーケストレータと�
 
 ### 基本統合パターン
 
+#### システム構成
+
+**ファイル構成**:
+```
+hybrid/
+├── CLAUDE.md              # ハイブリッドシステム自然言語マクロ構文定義
+├── agent_template.md      # エージェントテンプレートファイル
+├── evaluate_haiku.md      # 俳句評価マクロ
+├── generate_themes.md     # テーマ生成マクロ
+├── haiku_orchestrator.py  # Pythonオーケストレーションエンジン
+├── variable_db.py         # SQLite変数管理システム
+├── variables.db           # SQLiteデータベースファイル
+└── watch_variables.py     # リアルタイム変数監視ツール
+```
+
 #### SQLiteベースの協調処理
 
 **Python側: 高速データ処理**:
@@ -2570,6 +2597,15 @@ TODOリストをすべてクリアしてください
 - **自然言語マクロ構文**: 変数クリア以外は100%互換
 
 ### システム構成
+
+**ファイル構成**:
+```
+SQLite/
+├── CLAUDE.md         # SQLiteベース自然言語マクロ構文定義
+├── haiku_direct.md   # SQLite版俳句生成システム実装例
+├── variable_db.py    # SQLiteデータベース管理システム
+└── watch_variables.py # リアルタイム監視・デバッグツール
+```
 
 本実装は以下の4つのコンポーネントで構成されている：
 
