@@ -27,39 +27,21 @@ Claude Codeで上記をそのまま実行すると、自然言語マクロプロ
 
 自然言語マクロプログラミングの中核となる10のデザインパターンを、**基本4パターン**と**高度6パターン**に分類して体系化しています。
 
-### 📋 基本4パターン
+### 📋 基本4パターン - [macro.md](./macro.md)
 
-#### Pattern 1: Sequential Pipeline（順次パイプライン）
-タスクを順次実行し、前の処理結果を次の処理に渡す基本的な実行パターン
+- **[Pattern 1: Sequential Pipeline（順次パイプライン）](./macro.md#pattern-1-sequential-pipeline順次パイプライン)** - タスクを順次実行し、前の処理結果を次の処理に渡す基本的な実行パターン
+- **[Pattern 2: Parallel Processing（並列処理）](./macro.md#pattern-2-parallel-processing並列処理)** - 複数のタスクを同時実行し、効率的に処理を完了する並列実行パターン
+- **[Pattern 3: Conditional Execution（条件分岐）](./macro.md#pattern-3-conditional-execution条件分岐)** - 状況に応じて異なる処理経路を選択する条件分岐パターン
+- **[Pattern 4: Loop & Modular Programming（繰り返し・モジュール）](./macro.md#pattern-4-loop--modular-programming繰り返しモジュール)** - TODO-listベースの反復処理とFew-shot Pattern Loopによる効率的な繰り返し制御
 
-#### Pattern 2: Parallel Processing（並列処理）
-複数のタスクを同時実行し、効率的に処理を完了する並列実行パターン
+### 🚀 高度6パターン - [macro.md](./macro.md)
 
-#### Pattern 3: Conditional Execution（条件分岐）
-状況に応じて異なる処理経路を選択する条件分岐パターン
-
-#### Pattern 4: Loop & Modular Programming（繰り返し・モジュール）
-TODO-listベースの反復処理とFew-shot Pattern Loopによる効率的な繰り返し制御
-
-### 🚀 高度6パターン
-
-#### Pattern 5: Problem Solving & Recursion（問題解決・再帰）
-複雑な問題を段階的に分割し、TODO管理により解決する再帰的アプローチ
-
-#### Pattern 6: Learning from Experience（経験学習・知識蓄積）
-過去の実行結果を学習し、改善提案を生成する経験学習パターン
-
-#### Pattern 7: Environment Sensing, Knowledge-base & Environment Model（環境センシング・知識ベース・環境モデル）
-外部環境の情報を取得し、知識体系を構築し、状況に応じた適応的処理を実行
-
-#### Pattern 8: Human-in-the-Loop（人間協調型エージェント）
-人間の判断を適切なタイミングで組み込む協調型実行パターン
-
-#### Pattern 9: Error Handling（エラーハンドリング）
-エラーを予測し、適切な回復処理を実行する堅牢性向上パターン
-
-#### Pattern 10: Debug & Tracing（デバッグ・トレーシング）
-実行状況を可視化し、問題の特定と解決を支援する開発支援パターン
+- **[Pattern 5: Problem Solving & Recursion（問題解決・再帰）](./macro.md#pattern-5-problem-solving--recursion動的問題解決再帰的分割)** - 複雑な問題を段階的に分割し、TODO管理により解決する再帰的アプローチ
+- **[Pattern 6: Learning from Experience（経験学習・知識蓄積）](./macro.md#pattern-6-learning-from-experience経験学習知識蓄積記憶管理)** - 過去の実行結果を学習し、改善提案を生成する経験学習パターン
+- **[Pattern 7: Environment Sensing, Knowledge-base & Environment Model（環境センシング・知識ベース・環境モデル）](./macro.md#pattern-7-environment-sensing-knowledge-base-and-environment-model環境センシング知識ベース環境モデル)** - 外部環境の情報を取得し、知識体系を構築し、状況に応じた適応的処理を実行
+- **[Pattern 8: Human-in-the-Loop（人間協調型エージェント）](./macro.md#pattern-8-human-in-the-loophitl--人間協調型エージェント設計)** - 人間の判断を適切なタイミングで組み込む協調型実行パターン
+- **[Pattern 9: Error Handling（エラーハンドリング）](./macro.md#pattern-9-error-handlingエラーハンドリング)** - エラーを予測し、適切な回復処理を実行する堅牢性向上パターン
+- **[Pattern 10: Debug & Tracing（デバッグ・トレーシング）](./macro.md#pattern-10-debug--tracingデバッグトレーシング)** - 実行状況を可視化し、問題の特定と解決を支援する開発支援パターン
 
 ### 🔧 パターンの活用と統合
 
