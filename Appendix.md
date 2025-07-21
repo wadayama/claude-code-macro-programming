@@ -1125,10 +1125,9 @@ uv run python watch_variables.py --watch
 
 ### 📁 実践サンプル
 
-実行可能性検証システムの実用例：
+LLMベース実行前検査システムの実用例：
 
-- **高度**: [llm_lint/natural_language_validator.md](./llm_lint/natural_language_validator.md) - 実行可能性の4軸検証システム
-- **基本**: [examples/self_lint/code_verification.md](./examples/self_lint/code_verification.md) - セキュリティ・構文の基本チェック
+- **実装**: [llm_lint/natural_language_validator.md](./llm_lint/natural_language_validator.md) - 4軸検証システムの完全実装
 
 ## A.8: メタプログラミング
 
