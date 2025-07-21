@@ -1013,6 +1013,35 @@ python audit_viewer.py --format json --recent 5
 
 `llm_lint/`フォルダに配置された実用的な検証システムは、**natural_language_validator.md**を中核とする実行可能性検証ワークフローと、SQLiteベース変数管理システム（[A.16](#a16-sqliteベース変数管理)参照）により構成される。
 
+#### システム構成
+
+**ファイル構成**:
+```
+llm_lint/
+├── CLAUDE.md                      # SQLiteベース自然言語マクロ構文定義
+├── natural_language_validator.md  # 実行可能性検証ワークフロー
+├── variable_db.py                 # SQLite変数管理システム
+├── variables.db                   # SQLiteデータベースファイル
+└── watch_variables.py             # リアルタイム変数監視ツール
+```
+
+#### 核心コンポーネント
+
+**natural_language_validator.md** - 4軸検証システムの完全実装
+- 5つのテストケースによる体系的検証（物理的不可能性、論理矛盾、曖昧性等）
+- FEASIBLE/INFEASIBLE判定の自動化
+- 段階的検証プロセス（初期化 → 分析 → 判定 → レポート）
+
+**variable_db.py** - 検証結果の永続化システム（[A.16](#a16-sqliteベース変数管理)共通）
+- 検証状態とトラッキング
+- マルチプロセス対応の堅牢な並行アクセス
+- タイムスタンプ付き履歴管理
+
+**watch_variables.py** - 開発者支援ツール（[A.16](#a16-sqliteベース変数管理)共通）
+- リアルタイム検証プロセス監視
+- ANSI色コードによる状態表示
+- JSON/テーブル形式での柔軟な出力
+
 ### 実践的検証ワークフロー
 
 #### テストケース例
