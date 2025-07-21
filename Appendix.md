@@ -2310,21 +2310,6 @@ SQLiteデータベース（A.16参照）は、Pythonオーケストレータと�
 
 ### 基本統合パターン
 
-#### システム構成
-
-**ファイル構成**:
-```
-hybrid/
-├── CLAUDE.md              # ハイブリッドシステム自然言語マクロ構文定義
-├── agent_template.md      # エージェントテンプレートファイル
-├── evaluate_haiku.md      # 俳句評価マクロ
-├── generate_themes.md     # テーマ生成マクロ
-├── haiku_orchestrator.py  # Pythonオーケストレーションエンジン
-├── variable_db.py         # SQLite変数管理システム
-├── variables.db           # SQLiteデータベースファイル
-└── watch_variables.py     # リアルタイム変数監視ツール
-```
-
 #### SQLiteベースの協調処理
 
 **Python側: 高速データ処理**:
@@ -2380,6 +2365,19 @@ def call_macro(macro_file):
 **A.5との関係**: 本実装は[A.5: マルチエージェント・システム設計](#a5-マルチエージェントシステム設計)で紹介した俳句生成システムの**Pythonオーケストレーション版**である。A.5が純粋な自然言語マクロによる協調を示すのに対し、本例では制御フローをPythonに移すことで高速化とトークン効率化を実現している。両者を比較することで、純粋マクロ型と混合型のトレードオフを理解できる。
 
 #### システム構成
+
+**ファイル構成**:
+```
+hybrid/
+├── CLAUDE.md              # ハイブリッドシステム自然言語マクロ構文定義
+├── agent_template.md      # エージェントテンプレートファイル
+├── evaluate_haiku.md      # 俳句評価マクロ
+├── generate_themes.md     # テーマ生成マクロ
+├── haiku_orchestrator.py  # Pythonオーケストレーションエンジン
+├── variable_db.py         # SQLite変数管理システム
+├── variables.db           # SQLiteデータベースファイル
+└── watch_variables.py     # リアルタイム変数監視ツール
+```
 
 **haiku_orchestrator.py** - Pythonオーケストレータ:
 ```python
