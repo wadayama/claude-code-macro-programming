@@ -1020,31 +1020,7 @@ python audit_viewer.py --format json --recent 5
 
 ### llm_lintシステム実装
 
-`llm_lint/`フォルダに配置された実用的な検証システムの構成要素：
-
-#### 核心コンポーネント
-
-**variable_db.py** - SQLiteベース変数管理システム
-- 検証結果の永続化とトラッキング
-- マルチプロセス対応の堅牢な並行アクセス
-- タイムスタンプ付き変数履歴管理
-- WALモードによる高性能データベース操作
-
-**natural_language_validator.md** - 検証ワークフロー定義
-- 5つのテストケースによる体系的検証
-- FEASIBLE/INFEASIBLE判定の自動化
-- 段階的検証プロセス（初期化 → 分析 → 判定 → レポート）
-
-**watch_variables.py** - 開発者支援ツール
-- リアルタイム変数監視とデバッグ支援
-- ANSI色コードによる視認性向上
-- JSON/テーブル形式での柔軟な出力
-- 変数変更の自動検出と通知
-
-**CLAUDE.md** - SQLite版自然言語マクロ仕様
-- Bashツール経由のSQLite変数操作
-- `uv run python`による統一的な実行環境
-- エラーハンドリングとリトライ機構
+`llm_lint/`フォルダに配置された実用的な検証システムは、**natural_language_validator.md**を中核とする実行可能性検証ワークフローと、SQLiteベース変数管理システム（[A.16](#a16-sqliteベース変数管理)参照）により構成される。
 
 ### 実践的検証ワークフロー
 
