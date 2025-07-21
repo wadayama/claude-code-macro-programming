@@ -671,13 +671,17 @@ python_dev.mdの品質基準に従い、型ヒント、エラーハンドリン�
 
 #### システム概要とファイル構成
 
-**multi-haiku/** フォルダの構成：
-- **CLAUDE.md** - SQLite版マクロ定義ファイル
-- **agent.md** - 個別エージェント用テンプレートファイル  
-- **haiku-agent.md** - マルチエージェントシステムメインファイル
-- **variable_db.py** - SQLite変数管理システム実装
-- **watch_variables.py** - 変数監視・デバッグツール
-- **variables.db** - SQLiteデータベースファイル
+**ファイル構成**:
+```
+multi-haiku/
+├── CLAUDE.md         # SQLite版マクロ定義ファイル
+├── agent.md          # 個別エージェント用テンプレートファイル
+├── haiku-agent.md    # マルチエージェントシステムメインファイル
+├── variable_db.py    # SQLite変数管理システム実装
+└── watch_variables.py # 変数監視・デバッグツール
+```
+
+**注意**: `variables.db`ファイルは実行時に自動生成されるSQLiteデータベースファイルです。
 
 #### 動的エージェント生成メカニズム
 
@@ -966,10 +970,9 @@ python audit_viewer.py --format json --recent 5
 **変数操作**: 全ての変数作成・更新・削除を自動記録（old_value → new_value）
 **意思決定**: 判断内容と根拠理由を`log_decision`で構造化記録
 **推論プロセス**: LLMの思考過程を文脈・推論・結果として`log_reasoning`で記録
-**システム操作**: ファイル操作、外部API呼び出し、Python Tool実行
-**人間介入**: Human-in-the-Loop承認、修正指示、緊急停止  
-**エラー処理**: 例外発生、回復処理、代替手段の選択
-**エージェント通信**: マルチエージェントシステムでのメッセージ交換
+**マクロライフサイクル**: マクロの開始・終了時刻とセッション情報
+**エラー処理**: 例外発生、回復処理、代替手段の選択記録
+**ユーザー入力**: Human-in-the-Loop介入、修正指示、承認プロセス
 
 ### 利点
 
