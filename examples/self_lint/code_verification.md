@@ -13,15 +13,11 @@ TODOリストをすべてクリアしてください
 
 ## 検証ルールの設定
 
-以下の構造をvariables.jsonに作成してください：
+以下の変数をSQLiteデータベースに個別保存してください：
 
-```json
-{
-  "target_macro": "",
-  "lint_result": {},
-  "verification_log": []
-}
-```
+{{target_macro}}に空文字列を保存してください
+{{lint_result}}に"{}"を保存してください  
+{{verification_log}}に"[]"を保存してください
 
 **重要**: 以降のコード検証では、以下のルールを自動適用してください：
 
@@ -33,14 +29,9 @@ TODOリストをすべてクリアしてください
 
 ### 問題を含むマクロ例の提示
 
-以下のマクロを{{target_macro}}に保存してください：
+以下のマクロテキストを{{target_macro}}に保存してください：
 
-```markdown
-## 危険なファイル処理マクロ（検証用）
-sudo rm -rf {{user_folder}}/* を実行してください。
-{{undefined_variable}}の値を表示してください。
-外部APIから{{secret_key}}でデータを取得してください。
-```
+「危険なファイル処理マクロ（検証用）: sudo rm -rf {{user_folder}}/* を実行してください。{{undefined_variable}}の値を表示してください。外部APIから{{secret_key}}でデータを取得してください。」
 
 ### 検証対象の確認
 
@@ -50,38 +41,32 @@ sudo rm -rf {{user_folder}}/* を実行してください。
 
 ### セキュリティ・構文・品質チェック
 
-上記{{target_macro}}に対して宣言した検証ルールを適用し、以下の形式で{{lint_result}}に保存してください：
+上記{{target_macro}}に対して宣言した検証ルールを適用し、検証結果を分析してください。その後：
 
-```json
-{
-  "security_issues": ["検出されたセキュリティ問題のリスト"],
-  "syntax_issues": ["検出された構文問題のリスト"], 
-  "quality_issues": ["検出された品質問題のリスト"],
-  "severity": "error|warning|info",
-  "safe_to_proceed": false,
-  "recommended_fixes": ["修正提案のリスト"]
-}
-```
+{{security_issues}}に「検出されたセキュリティ問題: sudo rm -rf コマンドによる危険なファイル削除」を保存してください
+{{syntax_issues}}に「検出された構文問題: {{undefined_variable}}の未定義変数参照」を保存してください
+{{quality_issues}}に「検出された品質問題: {{secret_key}}の機密情報露出リスク」を保存してください
+{{severity}}に"error"を保存してください
+{{safe_to_proceed}}に"false"を保存してください
+{{recommended_fixes}}に「修正提案: 1.危険コマンドの削除 2.変数の事前定義 3.機密情報の適切な管理」を保存してください
 
 ### 検証ログの記録
 
-検証プロセスを{{verification_log}}に記録してください：
-- 各チェック項目の実行状況
-- 問題検出の詳細
-- 判定根拠
+検証プロセスの詳細ログを{{verification_log}}に記録してください：
+「セキュリティチェック: sudo rm -rf検出→重大リスク判定, 変数整合性チェック: undefined_variable未定義→エラー判定, 品質チェック: secret_key露出→セキュリティリスク判定」
 
 ## フェーズ3: 結果判定と対応
 
 ### 条件分岐による実行制御
 
-{{lint_result}}のsafe_to_proceedに応じて：
+{{safe_to_proceed}}の値を確認し、その結果に応じて：
 
-**safe_to_proceedがfalseの場合**：
+**{{safe_to_proceed}}が"false"の場合**：
 - 「⚠️ 検証エラー: マクロ実行を停止します」を表示
-- {{lint_result}}の問題詳細を表示
-- 修正提案を表示
+- {{security_issues}}、{{syntax_issues}}、{{quality_issues}}の内容を表示
+- {{recommended_fixes}}の修正提案を表示
 
-**safe_to_proceedがtrueの場合**：
+**{{safe_to_proceed}}が"true"の場合**：
 - 「✅ 検証完了: マクロは実行可能です」を表示
 
 ### 検証結果の表示
