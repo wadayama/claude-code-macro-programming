@@ -605,10 +605,7 @@ data_visualizer.pyを実行してください
 - 設定変更による柔軟な応用
 
 **3. リアルタイム監視**:
-```bash
-# 別ターミナルでの変数状態監視
-uv run python watch_variables.py --continuous
-```
+変数状態の監視については[A.16: SQLiteベース変数管理](#a16-sqliteベース変数管理)を参照。
 
 **4. 実行デモンストレーション**:
 ```bash
@@ -731,22 +728,15 @@ SQLiteのWALモード、リトライ機構、トランザクション管理に�
 
 #### 変数監視ツールの活用
 
-**watch_variables.py**による変数状態監視：
+マルチエージェント環境でのリアルタイム変数監視は`watch_variables.py`で実現できます。詳細な使用方法と機能については[A.16: SQLiteベース変数管理](#a16-sqliteベース変数管理)を参照してください。
+
 ```bash
-# リアルタイム監視
+# リアルタイム監視の基本例
 python watch_variables.py --continuous
 
-# 特定変数の追跡
+# 特定エージェント変数の追跡
 python watch_variables.py --watch agent_1_haiku --continuous
-
-# 統計情報表示
-python watch_variables.py --stats
 ```
-
-**デバッグ支援機能**：
-- カラー出力による変数変化の視覚化
-- JSON/テーブル形式での柔軟な出力
-- タイムスタンプ付き変更履歴追跡
 
 ### 技術的設計原則
 
@@ -1209,10 +1199,7 @@ cat agents/code_reviewer.md | claude -p --dangerously-skip-permissions
 - `{{review_report}}`: Code Reviewerが作成した評価レポート
 
 **実行中監視**:
-```bash
-# 別ターミナルでリアルタイム監視
-uv run python watch_variables.py --continuous
-```
+リアルタイム変数監視については[A.16: SQLiteベース変数管理](#a16-sqliteベース変数管理)を参照。
 
 #### 実行デモンストレーション
 
@@ -1325,11 +1312,23 @@ cat code_collaboration.md | claude -p --dangerously-skip-permissions
 
 自然言語マクロプログラミングにおいて、**SQLiteベース統合型検証システム**により、変数保存時の型安全性とデータ整合性を確保できる。`schema/variable_db.py`の統合保存関数により、従来の文字列ベース保存と型付き保存を同一インターフェースで提供し、段階的な型安全性導入を実現する。
 
-**システム構成**:
+#### システム構成
+
+**ファイル構成**:
+```
+schema/
+├── CLAUDE.md           # SQLiteベース型付き変数管理構文定義
+├── test_sample.md      # 型安全性検証テストマクロ
+├── test_schema.json    # JSON Schema形式型制約定義
+├── variable_db.py      # 統合型検証システム実装
+└── watch_variables.py  # 型情報付きリアルタイム変数監視
+```
+
+**主要コンポーネント**:
 - **統合保存関数**: `save_variable(name, value, type_name=None)` - 型指定の有無により動作切り替え
 - **外部スキーマ定義**: `test_schema.json` - JSON Schema形式での型制約定義
 - **型検証エンジン**: 基本型・制約付き型・列挙型に対応した検証ロジック
-- **リアルタイム監視**: `watch_variables.py` - 型情報付き変数状態の視覚化
+- **リアルタイム監視**: 型情報付き変数監視（[A.16](#a16-sqliteベース変数管理)参照）
 
 **型安全性レベル**:
 - **基本保存**: `{{variable}}に値を保存` → 型チェックなし（後方互換性）
@@ -1477,29 +1476,6 @@ task_status: 有効
 invalid_data: Type conversion failed for integer: invalid literal for int()
 ```
 
-#### watch_variables.py型対応監視ツール
-
-`schema/watch_variables.py`により、型情報付きリアルタイム変数監視が可能：
-
-```bash
-# 型情報付き変数状態表示
-python schema/watch_variables.py --once
-
-# 継続監視（型変更を視覚化）
-python schema/watch_variables.py --continuous
-
-# 型検証状況の確認
-python schema/watch_variables.py --validate
-
-# 利用可能なスキーマ型の表示
-python schema/watch_variables.py --schemas
-```
-
-**表示機能**:
-- **カラーコード表示**: 型別の色分け（typed=マゼンタ、untyped=黄色）
-- **検証ステータス**: ✓（有効）、✗（無効）、-（型なし）の視覚的表示
-- **型統計**: 型分布、最近更新された変数、データベース統計
-- **変更追跡**: 変数値・型変更のリアルタイム表示
 
 ### マルチエージェント環境での型安全性
 
@@ -1567,7 +1543,7 @@ unknownをstatus型として{{invalid_status}}に保存してください
 
 **完全な後方互換性**: 既存の`{{variable}}に保存`構文をそのまま使用可能（型チェックなし）
 **段階的導入**: プロジェクトの重要度に応じて選択的に型安全性を導入
-**リアルタイム監視**: `watch_variables.py`による型情報付き開発・デバッグ支援
+**リアルタイム監視**: 型情報付き開発・デバッグ支援（[A.16](#a16-sqliteベース変数管理)参照）
 **マルチエージェント対応**: SQLite並行アクセス機能による安全なエージェント間データ交換
 **外部スキーマ管理**: `test_schema.json`による型定義の保守性・拡張性確保
 **日本語完全対応**: Unicode文字列と日本語の真偽値表現（はい/いいえ）をサポート
@@ -1578,7 +1554,7 @@ unknownをstatus型として{{invalid_status}}に保存してください
 
 - **基本**: [統合型検証テスト](./schema/test_sample.md) - 基本型・制約付き型・エラーケースの包括的検証
 - **スキーマ**: [型定義ファイル](./schema/test_schema.json) - JSON Schema形式での外部型定義
-- **監視**: `python schema/watch_variables.py` - 型情報付きリアルタイム変数監視
+- **監視**: 型情報付きリアルタイム変数監視（[A.16](#a16-sqliteベース変数管理)参照）
 - **システム**: [統合型検証システム](./schema/variable_db.py) - SQLiteベース型安全変数管理の詳細実装
 
 
@@ -2642,7 +2618,17 @@ uv run python watch_variables.py --continuous
 
 # 特定変数の監視
 uv run python watch_variables.py --watch user_name --continuous
+
+# 統計情報表示
+uv run python watch_variables.py --stats
 ```
+
+**視覚化機能:**
+- **カラーコード表示**: 変数タイプ別の色分け（新規作成=緑、更新=黄色、削除=赤）
+- **型情報表示**: 型付き変数は型名と検証ステータスを表示（typed=マゼンタ、untyped=黄色）
+- **検証ステータス**: ✓（有効）、✗（無効）、-（型なし）の視覚的表示
+- **変更追跡**: 変数値・型変更のリアルタイムタイムスタンプ付き表示
+- **統計分析**: 型分布、最近更新された変数、データベース使用状況
 
 #### 3. CLAUDE.md - SQLiteベースマクロ構文定義
 
