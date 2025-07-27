@@ -6,6 +6,7 @@
 
 ---
 
+**Published**: 2025-06-15  
 **Last Updated**: 2025-07-27  
 **Author**: Tadashi Wadayama (with assistance from Claude Code)  
 **License**: MIT License (2025)
