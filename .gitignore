@@ -1,6 +1,11 @@
 # macOS
 .DS_Store
 
+# Dropbox conflict files
+*競合コピー*.md
+*の競合コピー*
+*conflict copy*
+
 # Editor
 .vscode/
 .idea/
